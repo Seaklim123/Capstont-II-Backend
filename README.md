@@ -27,4 +27,9 @@ past code below in to you .env file
 git pull
 php artisan migrate 
 ```
+  # Setup project in the Controller 
+  # Setup project in the Request Rule
+  # Setup project in the Response message request
+
+
 
