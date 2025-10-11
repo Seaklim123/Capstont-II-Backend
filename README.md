@@ -21,3 +21,10 @@ past code below in to you .env file
 	DB_USERNAME=root
 	DB_PASSWORD=	  
 	```
+ 
+   # Migration with database 
+```
+git pull
+php artisan migrate 
+```
+
