@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('imagePath');
-            $table->decimal('price');
-            $table->decimal('discount');
-            $table->text('description');
+            $table->string('image_path')->nullable();
+            $table->decimal('price')->default(0);
+            $table->decimal('discount')->default(0);
+            $table->text('description')->nullable();
             $table->enum('status', ['available', 'unavailable'])->default('available');
             $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();

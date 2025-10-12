@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('order_inoformations', function (Blueprint $table) {
             $table->id();
             $table->integer('numberOrder');
-            $table->decimal('totalPrice');
-            $table->double('discount');
+            $table->decimal('totalPrice')->default(0);
+            $table->double('discount')->default(0);
             $table->enum('status', ['starting', 'done']);
             $table->enum('payment', ['card', 'cash']);
             $table->timestamps();
