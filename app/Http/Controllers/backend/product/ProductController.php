@@ -3,47 +3,48 @@
 namespace App\Http\Controllers\backend\product;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\backend\products\CreateProductRequest;
+use App\Http\Requests\backend\products\UpdateProductRequest;
+use App\Http\Resources\Backend\products\ProductResource;
+use App\Services\ProductServices;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $productService;
+
+    public function __construct(ProductServices $productService)
+    {
+        $this->productService = $productService;
+    }
+
     public function index()
     {
-        //
+        $products = $this->productService->getAllProducts();
+        return ProductResource::collection($products);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(int $id)
     {
-        //
+        $product = $this->productService->getProduct($id);
+        return new ProductResource($product);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function store(CreateProductRequest $request)
     {
-        //
+        $product = $this->productService->createProduct($request->validated());
+        return new ProductResource($product);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateProductRequest $request, int $id)
     {
-        //
+        dd($request->validated());
+        $product = $this->productService->updateProduct($id, $request->validated());
+        return new ProductResource($product);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $this->productService->deleteProduct($id);
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }
