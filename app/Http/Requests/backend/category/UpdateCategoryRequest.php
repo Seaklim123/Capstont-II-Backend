@@ -23,6 +23,8 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             //
+            'name' => 'sometimes|required|string|max:255',
+            'image_path' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ];
     }
 }
