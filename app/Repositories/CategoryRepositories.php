@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
@@ -9,8 +9,9 @@ class CategoryRepositories implements CategoryRepositoriesInterfaces{
     public function getCategory(){
         return Category::all();
     }
+
+
     public function createCategory($data){
-        $category = Category::create($data);
-        return $category;
-    } 
+        return Category::create($data);
+    }
 }
