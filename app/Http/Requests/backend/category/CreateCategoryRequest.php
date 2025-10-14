@@ -23,8 +23,8 @@ class CreateCategoryRequest extends FormRequest
     {
         return [
             //
-             'name' => 'required|string|max:255',
-            'image_path' => 'nullable|string'
+            'name' => 'required|string|max:255',
+            'image_path' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ];
     }
 }

@@ -9,9 +9,8 @@ class CategoryRepositories implements CategoryRepositoriesInterfaces{
     public function getCategory(){
         return Category::all();
     }
-
-
     public function createCategory($data){
-        return Category::create($data);
+        $category = Category::create($data);
+        return $category;
     }
 }

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\backend\category;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\backend\category\CreateCategoryRequest;
+use App\Http\Requests\backend\category\UpdateCategoryRequest;
 use App\Http\Resources\Backend\category\CategoryResource;
 use App\Services\CategoryServices;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -42,24 +42,34 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         //
+        $category = $this->categoryServices->findCategory($id);
+        return new CategoryResource($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoryRequest $request,int $id )
     {
         //
-    }
+        $data = $request->validated();
+        $data['image_path'] = $request->file('image_path') ?? null;
+
+        $category = $this->categoryServices->updateCategory($id, $data);
+
+        return new CategoryResource($category);
+        }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
         //
+        $this->categoryServices->deleteCategory($id);
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }
