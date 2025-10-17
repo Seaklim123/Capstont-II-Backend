@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\backend\tables;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTableNumberRequest extends FormRequest
@@ -11,18 +12,19 @@ class UpdateTableNumberRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            //
+            'number' => 'sometimes|required|integer|min:1|max:100',
+            'status' => 'sometimes|required|string|in:available,unavailable',
         ];
     }
 }
