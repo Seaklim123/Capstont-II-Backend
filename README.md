@@ -29,7 +29,28 @@ php artisan migrate
 ```
   # Setup project in the Controller 
   # Setup project in the Request Rule
-  # Setup project in the Response message request
+  # Setup project in the Response message request 
 
-
+  #  Manage on the Table Number
+1. Create a new table number 
+2. Update table number data if incorrect
+3. List all table number 
+4. Delete table number
+5. Before run the application please make source
+ ```git pull
+    php artisan migrate:refresh
+    php artisan route:clear
+    php artisan route:cache
+    php artisan serve
+```
+# Project Structure
+1. DTO: Data Transfer Object 
+2. Exceptions to handle exception when request invalided
+3. Mapper convert data from dto to models
+4. Repository use to query data from database
+5. Service to handle business logic 
+6. Controller to implement service 
+7. Request rule to request data 
+8. Resource rule to response data to request 
+9. Providers 
 
