@@ -37,7 +37,6 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, int $id)
     {
-        dd($request->validated());
         $product = $this->productService->updateProduct($id, $request->validated());
         return new ProductResource($product);
     }

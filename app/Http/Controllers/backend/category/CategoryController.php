@@ -56,7 +56,7 @@ class CategoryController extends Controller
     {
         //
         $data = $request->validated();
-        $data['image_path'] = $request->file('image_path') ?? null;
+        // $data['image_path'] = $request->file('image_path') ?? null;
 
         $category = $this->categoryServices->updateCategory($id, $data);
 

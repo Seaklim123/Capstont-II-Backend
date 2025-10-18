@@ -16,16 +16,21 @@ class CategoryRepositories implements CategoryRepositoriesInterfaces{
 
     public function findCategory($id)
     {
-        // TODO: Implement findCategory() method.
+        $category = Category::find($id);
+        return $category;
     }
 
     public function updateCategory(int $id, $data)
     {
-        // TODO: Implement updateCategory() method.
+        $category = Category::find($id);
+         $category->update($data);
+         return $category;
     }
 
     public function deleteCategory(int $id)
     {
-        // TODO: Implement deleteCategory() method.
+        $category = Category::find($id);
+        $category->delete();
+        return $category;
     }
 }
