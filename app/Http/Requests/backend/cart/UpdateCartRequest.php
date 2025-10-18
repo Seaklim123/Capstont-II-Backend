@@ -23,6 +23,10 @@ class UpdateCartRequest extends FormRequest
     {
         return [
             //
+            'note' => 'nullable|string|max:255',
+            'quantity' => 'sometimes|integer|min:1',
+            'product_id' => 'sometimes|exists:products,id',
+            'table_id' => 'sometimes|exists:table_numbers,id',
         ];
     }
 }

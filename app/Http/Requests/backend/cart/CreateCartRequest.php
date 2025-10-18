@@ -23,7 +23,10 @@ class CreateCartRequest extends FormRequest
     {
         return [
             //
-           
+           'note' => 'nullable|string|max:255',
+            'quantity' => 'required|integer|min:1',
+            'product_id' => 'required|exists:products,id',
+            'table_id' => 'required|exists:table_numbers,id',
         ];
     }
 }

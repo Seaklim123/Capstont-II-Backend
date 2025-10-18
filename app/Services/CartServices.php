@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\Interfaces\CartRepositoriesInterfaces;
+
+class CartServices{
+    protected $cartRepository;
+
+    public function __construct(CartRepositoriesInterfaces $cartRepository)
+    {
+        $this->cartRepository = $cartRepository;
+    }
+
+    public function getAllCarts()
+    {
+        return $this->cartRepository->getAll();
+    }
+
+    public function findCart(int $id)
+    {
+        return $this->cartRepository->findById($id);
+    }
+
+    public function createCart(array $data)
+    {
+        return $this->cartRepository->create($data);
+    }
+
+    public function updateCart(int $id, array $data)
+    {
+        return $this->cartRepository->update($id, $data);
+    }
+
+    public function deleteCart(int $id)
+    {
+        return $this->cartRepository->delete($id);
+    }
+}

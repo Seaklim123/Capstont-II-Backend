@@ -3,64 +3,52 @@
 namespace App\Http\Controllers\backend\cart;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\backend\cart\CreateCartRequest;
+use App\Http\Requests\backend\cart\UpdateCartRequest;
 use App\Http\Requests\backend\category\CreateCategoryRequest;
+use App\Http\Resources\Backend\cart\CartResource;
 use App\Http\Resources\Backend\category\CategoryResource;
+use App\Services\CartServices;
 use App\Services\CategoryServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+protected $cartService;
 
-    protected $categoryServices; 
-
-    public function __construct(CategoryServices $categoryServices){
-        $this->categoryServices = $categoryServices;
+    public function __construct(CartServices $cartService)
+    {
+        $this->cartService = $cartService;
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
-        $category = $this->categoryServices->allCategroy();
-        return CategoryResource::collection($category);
+        $carts = $this->cartService->getAllCarts();
+        return CartResource::collection($carts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CreateCategoryRequest $request)
+    public function store(CreateCartRequest $request)
     {
-        //
-        $validated = $request->validated();
-
-        $category = $this->categoryServices->createCategory($validated);
-        return new CategoryResource($category);
-
-
+        $cart = $this->cartService->createCart($request->validated());
+        return new CartResource($cart);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        $cart = $this->cartService->findCart($id);
+        return new CartResource($cart);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateCartRequest $request, int $id)
     {
-        //
+        $cart = $this->cartService->updateCart($id, $request->validated());
+        return new CartResource($cart);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(int $id): JsonResponse
     {
-        //
+        $this->cartService->deleteCart($id);
+        return response()->json(['message' => 'Cart deleted successfully.']);
     }
 }
