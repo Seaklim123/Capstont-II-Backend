@@ -8,25 +8,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\backend\tables\CreateTableNumberRequest;
 use App\Http\Requests\backend\tables\UpdateTableNumberRequest;
 use App\Http\Resources\Backend\tables\TableNumberResource;
-use App\Services\TableNumberService;
+use App\Services\implementation\TableNumberServiceImplementation;
 use Illuminate\Http\JsonResponse;
 
 class TableNumberController extends Controller
 {
-    protected TableNumberService $tableNumberService;
+    protected TableNumberServiceImplementation $tableNumberService;
 
-    public function __construct(TableNumberService $tableNumberService)
+    public function __construct(TableNumberServiceImplementation $tableNumberService)
     {
         $this->tableNumberService = $tableNumberService;
     }
 
     public function index(): JsonResponse
     {
-        $collection = $this->tableNumberService->getAllTableNumbers();
+        $table = $this->tableNumberService->getAllTableNumbers();
         return response()->json([
-            'message' => 'Table numbers retrieved',
-            'data' => TableNumberResource::collection($collection),
-        ], 200);
+            'message' => 'List all Table Numbers',
+            'data' => TableNumberResource::collection($table),
+        ]);
     }
 
     public function store(CreateTableNumberRequest $request): JsonResponse
@@ -48,7 +48,7 @@ class TableNumberController extends Controller
         return response()->json([
             'message' => 'Table number retrieved',
             'data' => new TableNumberResource($table),
-        ], 200);
+        ]);
     }
 
     /**
@@ -61,7 +61,7 @@ class TableNumberController extends Controller
         return response()->json([
             'message' => 'Table number updated',
             'data' => new TableNumberResource($table),
-        ], 200);
+        ]);
     }
 
     /**
@@ -72,6 +72,6 @@ class TableNumberController extends Controller
         $this->tableNumberService->deleteTableNumber($id);
         return response()->json([
             'message' => 'Table number deleted',
-        ], 200);
+        ]);
     }
 }

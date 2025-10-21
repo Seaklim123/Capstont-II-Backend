@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static find(int $id)
+ * @method static create(TableNumber $table)
+ */
 class TableNumber extends Model
 {
     use HasFactory;

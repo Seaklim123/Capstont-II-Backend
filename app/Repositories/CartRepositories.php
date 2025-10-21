@@ -22,6 +22,13 @@ class CartRepositories implements CartRepositoriesInterfaces{
     {
         return $this->model->with(['product', 'table'])->findOrFail($id);
     }
+    public function findBytable(int $id)
+    {
+        return $this->model->where('table_id', $id)
+            ->join('products','products.id','=','carts.product_id')
+             ->where('carts.status', 'starting')
+             ->get();
+    }
 
     public function create(array $data)
     {

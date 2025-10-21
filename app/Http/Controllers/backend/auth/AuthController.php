@@ -2,48 +2,29 @@
 
 namespace App\Http\Controllers\backend\auth;
 
+use App\Dtos\UserDto;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\backend\auth\UserRegister;
+use App\Http\Resources\Backend\Auth\AuthResource;
+use App\Services\implementation\UserServiceImplementation;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    protected UserServiceImplementation $userService;
+
+    public function __construct(UserServiceImplementation $userService){
+        $this->userService = $userService;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function register(UserRegister $request): JsonResponse
     {
-        //
+        $userDto  = new UserDto(...$request->validated());
+        $user = $this->userService->register($userDto);
+        return response()->json([
+            'message' => 'User successfully registered',
+            'user' => new AuthResource($user)
+        ], status: 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

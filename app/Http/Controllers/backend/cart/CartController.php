@@ -37,7 +37,7 @@ protected $cartService;
     public function show(int $id)
     {
         $cart = $this->cartService->findCart($id);
-        return new CartResource($cart);
+        return response()->json($cart);
     }
 
     public function update(UpdateCartRequest $request, int $id)
