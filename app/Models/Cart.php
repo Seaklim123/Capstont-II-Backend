@@ -17,6 +17,7 @@ class Cart extends Model
         'quantity',
         'product_id',
         'table_id',
+        'status'
     ];
 
     public function product(): BelongsTo{

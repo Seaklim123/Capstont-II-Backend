@@ -27,6 +27,8 @@ class UpdateCartRequest extends FormRequest
             'quantity' => 'sometimes|integer|min:1',
             'product_id' => 'sometimes|exists:products,id',
             'table_id' => 'sometimes|exists:table_numbers,id',
+            'status' => 'nullable|in:starting,ordering',
+
         ];
     }
 }

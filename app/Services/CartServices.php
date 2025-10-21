@@ -19,9 +19,11 @@ class CartServices{
 
     public function findCart(int $id)
     {
-        return $this->cartRepository->findById($id);
-    }
+        $carts = $this->cartRepository->findBytable($id);
 
+        return $carts; // ✅ Return the full collection 
+   }
+    
     public function createCart(array $data)
     {
         return $this->cartRepository->create($data);

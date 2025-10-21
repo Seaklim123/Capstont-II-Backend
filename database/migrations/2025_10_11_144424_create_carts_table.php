@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('table_id')->constrained('table_numbers');
+            $table->enum('status', ['starting','ordering'])->default('starting');
             $table->timestamps();
         });
     }
