@@ -3,22 +3,83 @@
 namespace App\Repositories\implement;
 
 use App\Dtos\UserDto;
+use App\Exceptions\UserNotFoundException;
 use App\Mappers\UserMapper;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Collection;
 
 class UserRepositoryImplementation implements UserRepositoryInterface
 {
 
-    public function findUserByUsername(string $username): User
-    {
-         return User::query()->where('username', $username)->first();
-    }
 
-    public function register(UserDto $userDto): User
+    public function registerUser(UserDto $userDto): User
     {
         $user = UserMapper::userMapper($userDto);
-        return User::create($user);
+        $user->save();
+        return $user;
     }
-}
 
+    /**
+     * @throws UserNotFoundException
+     */
+    public function findUserByUsername(string $username): ?User
+    {
+       $user = User::where("username", $username)->first();
+       if(!$user){
+           throw new UserNotFoundException();
+       }
+       return $user;
+    }
+
+    public function getAllUsers(): Collection
+    {
+       return User::all();
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public function getUserById(int $id): ?User
+    {
+        $user = User::where("id", $id)->first();
+        if(!$user){
+            throw new UserNotFoundException();
+        }
+        return $user;
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public function updateUserById(UserDto $userDto, int $id): ?User
+    {
+        $user = User::where("id", $id)->first();
+        if(!$user){
+            throw new UserNotFoundException();
+        }
+        $userModelUpdate = UserMapper::userMapper($userDto);
+        $user->update($userModelUpdate->getAttributes());
+        return $user;
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public function deleteUserById(int $id): ?User
+    {
+        $user = User::where("id", $id)->first();
+        if(!$user){
+            throw new UserNotFoundException();
+        }
+        return $user->delete();
+    }
+
+
+    public function createCashier(UserDto $userDto): User{
+        $user = UserMapper::userMapper($userDto);
+        $user->save();
+        return $user;
+    }
+
+}

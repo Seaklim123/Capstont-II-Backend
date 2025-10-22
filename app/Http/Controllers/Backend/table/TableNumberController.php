@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\backend\table;
+namespace App\Http\Controllers\Backend\table;
 
 use App\Dtos\TableNumberDto;
 use App\Exceptions\TableNumberNotFoundException;
@@ -19,10 +19,13 @@ class TableNumberController extends Controller
     {
         $this->tableNumberService = $tableNumberService;
     }
+    public function hello(): string {
+        return 'Good morning!';
+    }
 
     public function index(): JsonResponse
     {
-        $table = $this->tableNumberService->getAllTableNumbers();
+        $table = $this->tableNumberService->getAttTableNumbers();
         return response()->json([
             'message' => 'List all Table Numbers',
             'data' => TableNumberResource::collection($table),

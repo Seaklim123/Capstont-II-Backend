@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->Integer('numberOrder');
             $table->string('note')->nullable();
-            $table->integer('quantity')->default(1);
+            $table->Integer('quantity')->default(1);
             $table->enum('status', ['pending', 'accepted', 'rejected']);
             $table->foreignId('cart_id')->constrained('carts');
             $table->timestamps();

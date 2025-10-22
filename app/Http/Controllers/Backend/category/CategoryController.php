@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\backend\category;
+namespace App\Http\Controllers\Backend\category;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\backend\category\CreateCategoryRequest;

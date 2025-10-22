@@ -12,8 +12,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $status
  * @property mixed $created_at
  * @property mixed $updated_at
+ *
  */
-class UpdateUserResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -28,7 +29,7 @@ class UpdateUserResource extends JsonResource
             'role' => $this->role,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s')
         ];
     }
 }

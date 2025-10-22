@@ -4,13 +4,12 @@ namespace App\Services\implementation;
 
 use App\Dtos\TableNumberDto;
 use App\Exceptions\TableNumberNotFoundException;
-use App\Mappers\TableNumberMapper;
 use App\Models\TableNumber;
 use App\Repositories\implement\TableNumberRepositoryImplementation;
-use App\Repositories\Interfaces\TableNumberRepositoryInterface;
+use App\Services\Interface\TableNumberServiceInterface;
 use Illuminate\Support\Collection;
 
-class TableNumberServiceImplementation implements TableNumberRepositoryInterface
+class TableNumberServiceImplementation implements TableNumberServiceInterface
 {
     protected TableNumberRepositoryImplementation $tableNumberRepository;
 
@@ -18,7 +17,7 @@ class TableNumberServiceImplementation implements TableNumberRepositoryInterface
         $this->tableNumberRepository = $tableNumberRepository;
     }
 
-    public function getAllTableNumbers(): Collection
+    public function getAttTableNumbers(): Collection
     {
         return $this->tableNumberRepository->getAllTableNumbers();
     }
@@ -33,9 +32,7 @@ class TableNumberServiceImplementation implements TableNumberRepositoryInterface
 
     public function createTableNumber(TableNumberDto $tableNumberDto): TableNumber
     {
-        $table = TableNumberMapper::tableNumberMapper($tableNumberDto);
-        $table->save();
-        return $table;
+        return $this->tableNumberRepository->createTableNumber($tableNumberDto);
     }
 
     /**

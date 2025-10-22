@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Repositories\Interfaces\CartRepositoriesInterfaces;
 
 class CartServices{
-    protected $cartRepository;
+//    protected $cartRepository;
 
-    public function __construct(CartRepositoriesInterfaces $cartRepository)
+    public function __construct(private CartRepositoriesInterfaces $cartRepository)
     {
         $this->cartRepository = $cartRepository;
     }
@@ -19,11 +19,12 @@ class CartServices{
 
     public function findCart(int $id)
     {
-        $carts = $this->cartRepository->findBytable($id);
 
-        return $carts; // ✅ Return the full collection 
+        return $this->cartRepository->findBytable($id);
+
+       // return $carts; // ✅ Return the full collection
    }
-    
+
     public function createCart(array $data)
     {
         return $this->cartRepository->create($data);

@@ -4,14 +4,14 @@ namespace App\Http\Requests\backend\orders;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateOrderRequest extends FormRequest
+class UpdateStatusOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,7 @@ class UpdateOrderRequest extends FormRequest
     {
         return [
             //
+            'status' => 'required|in:starting,accepted,cancel', // ✅ match your enum in the DB
         ];
     }
 }

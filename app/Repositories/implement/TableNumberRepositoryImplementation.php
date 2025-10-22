@@ -31,7 +31,8 @@ class TableNumberRepositoryImplementation implements TableNumberRepositoryInterf
     public function createTableNumber(TableNumberDto $tableNumberDto): TableNumber
     {
         $table = TableNumberMapper::tableNumberMapper($tableNumberDto);
-        return TableNumber::create($table);
+        $table->save();
+        return $table;
     }
 
     /**

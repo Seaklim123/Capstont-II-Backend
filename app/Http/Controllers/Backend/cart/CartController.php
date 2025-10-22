@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\backend\cart;
+namespace App\Http\Controllers\Backend\cart;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\backend\cart\CreateCartRequest;
