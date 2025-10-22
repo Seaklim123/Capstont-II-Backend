@@ -17,4 +17,5 @@ Route::apiResource('products', ProductController::class);
 Route::apiResource('tables', TableNumberController::class);
 Route::apiResource('carts', CartController::class);
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 

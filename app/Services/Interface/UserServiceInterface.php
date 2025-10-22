@@ -10,4 +10,6 @@ interface UserServiceInterface
     public function findUserByUsername(string $username): ?User;
 
     public function register(UserDto $userDto): User;
+
+    public function loginUser(UserDto $userDto): User;
 }

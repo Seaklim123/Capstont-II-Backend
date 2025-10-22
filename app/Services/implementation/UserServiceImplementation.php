@@ -26,4 +26,9 @@ class UserServiceImplementation implements UserServiceInterface
         $user->save();
         return $user;
     }
+
+    public function loginUser(UserDto $userDto): User
+    {
+        return $this->userRepository->loginUser($userDto);
+    }
 }

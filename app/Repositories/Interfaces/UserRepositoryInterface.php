@@ -7,6 +7,9 @@ use App\Models\User;
 
 interface UserRepositoryInterface
 {
-    public function findUserByUsername(string $username): User;
+    public function findUserByUsername(string $username): ?User;
     public function register(UserDto $userDto): User;
+
+    public function loginUser(UserDto $userDto): false|User;
+
 }

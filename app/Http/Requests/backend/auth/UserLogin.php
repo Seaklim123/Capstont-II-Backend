@@ -5,6 +5,10 @@ namespace App\Http\Requests\backend\auth;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property mixed $username
+ * @property mixed $password
+ */
 class UserLogin extends FormRequest
 {
     /**
