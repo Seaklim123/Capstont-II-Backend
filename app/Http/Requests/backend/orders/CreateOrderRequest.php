@@ -11,7 +11,7 @@ class CreateOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,16 @@ class CreateOrderRequest extends FormRequest
     {
         return [
             //
+            'table_id' => 'required|integer',
+            'numberOrder'   => 'required|integer',
+            'totalPrice'    => 'nullable|numeric|min:0',
+            'discount'      => 'nullable|numeric|min:0',
+            'status'        => 'required|in:starting,accepted,cancel',
+            'payment'       => 'required|in:card,cash',
+            'note'          => 'nullable|string',
+            'refund'        => 'nullable|numeric|min:0',
+            'phone_number'  => 'nullable|string|regex:/^[0-9+\-\s]{8,15}$/',
+            'user_id'       => 'nullable|exists:users,id',
         ];
     }
 }

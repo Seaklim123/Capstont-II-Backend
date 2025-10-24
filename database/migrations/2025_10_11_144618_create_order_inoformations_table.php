@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('order_informations', function (Blueprint $table) {
             $table->id();
             $table->integer('numberOrder');
-            $table->decimal('totalPrice')->default(0);
-            $table->double('discount')->default(0);
-            $table->enum('status', ['starting', 'done']);
-            $table->enum('payment', ['card', 'cash']);
+            $table->double('totalPrice')->default(0)->nullable();
+            $table->double('discount')->default(0)->nullable();
+            $table->enum('status', ['starting', 'accepted', 'cancel'])->default('starting');
+            $table->enum('payment', ['card', 'cash'])->default('cash');
+            $table->longText('note')->nullable();
+            $table->double('refund')->default(0)->nullable();
+            $table->string('phone_number')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

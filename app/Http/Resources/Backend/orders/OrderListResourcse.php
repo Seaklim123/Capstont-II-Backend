@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Backend\cart;
+namespace App\Http\Resources\Backend\orders;
 
-use App\Http\Resources\Backend\products\ProductResource;
-use App\Http\Resources\Backend\tables\TableNumberResource;
+use App\Http\Resources\Backend\cart\CartResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CartResource extends JsonResource
+class OrderListResourcse extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,14 +17,15 @@ class CartResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'numberOrder' => $this->numberOrder,
             'note' => $this->note,
             'quantity' => $this->quantity,
             'status' => $this->status,
+            'cart_id' => $this->cart_id,
             'table_id' => $this->table_id,
-            'product' => new ProductResource($this->whenLoaded('product')),
-            'table_number' => new TableNumberResource($this->whenLoaded('tableNumber')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'cart' => new CartResource($this->whenLoaded('cart')),
         ];
     }
 }

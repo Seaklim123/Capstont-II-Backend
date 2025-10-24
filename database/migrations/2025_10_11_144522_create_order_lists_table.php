@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('order_lists', function (Blueprint $table) {
             $table->id();
             $table->Integer('numberOrder');
-            $table->string('note')->nullable();
-            $table->integer('quantity')->default(1);
-            $table->enum('status', ['pending', 'accepted', 'rejected']);
+            $table->enum('status', ['starting', 'accepted', 'cancel']);
             $table->foreignId('cart_id')->constrained('carts');
             $table->timestamps();
         });

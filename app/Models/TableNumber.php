@@ -19,6 +19,6 @@ class TableNumber extends Model
 
     public function cart(): HasMany
     {
-        return $this->hasMany(Cart::class, 'table_number_id', 'id');
+        return $this->hasMany(Cart::class, 'table_id', 'id');
     }
 }

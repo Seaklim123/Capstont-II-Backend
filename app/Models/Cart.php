@@ -20,11 +20,14 @@ class Cart extends Model
         'status'
     ];
 
-    public function product(): BelongsTo{
-        return $this->belongsTo(Products::class , 'product_id', 'id');
+    public function product()
+    {
+        return $this->belongsTo(Products::class, 'product_id');
     }
-    public function table(): BelongsTo{
-        return $this->belongsTo(TableNumber::class , 'table_id', 'id');
+
+    public function tableNumber()
+    {
+        return $this->belongsTo(TableNumber::class, 'table_id');
     }
 
 }

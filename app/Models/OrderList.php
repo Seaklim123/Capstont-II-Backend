@@ -10,20 +10,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class OrderList extends Model
 {
     use HasFactory;
-    protected $table = 'order_list';
+    protected $table = 'order_lists';
     protected $fillable = [
         'numberOrder',
-        'note',
-        'quantity',
         'status',
-        'card_id'
+        'cart_id'
     ];
 
-    public function cart(): HasMany{
-        return $this->hasMany(Cart::class, 'table_number_id', 'id');
+   public function cart()
+    {
+        return $this->belongsTo(Cart::class);
     }
-
-    public function ordersinformation(): HasOne{
-        return $this->hasOne(OrderInformation::class, 'ordersinformation_id', 'id');
+    public function orderInformation()
+    {
+        return $this->belongsTo(OrderInformation::class, 'numberOrder', 'numberOrder');
     }
-}
+}   
