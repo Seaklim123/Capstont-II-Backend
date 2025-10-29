@@ -26,7 +26,7 @@ Route::prefix('orders')->group(function () {
 
     // 📋 (Optional) Show a single order by ID
     Route::get('/status', [OrderController::class, 'getByStatus'])->name('orders.getByStatus');
-    Route::get('/cheack/{id}', [OrderController::class, 'checkOrder'])->name('orders.cheack');
+    Route::get('/show/{id}', [OrderController::class, 'checkOrder'])->name('orders.cheack');
     Route::get('/number/{id}', [OrderController::class, 'findByNumber'])->name('orders.number');
 
     // ✅ (Optional) Mark order as done
