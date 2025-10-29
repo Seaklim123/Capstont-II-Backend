@@ -28,6 +28,7 @@ Route::prefix('orders')->group(function () {
     Route::get('/status', [OrderController::class, 'getByStatus'])->name('orders.getByStatus');
     Route::get('/show/{id}', [OrderController::class, 'checkOrder'])->name('orders.cheack');
     Route::get('/number/{id}', [OrderController::class, 'findByNumber'])->name('orders.number');
+    Route::put('/listorder/{id}', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
 
     // ✅ (Optional) Mark order as done
     Route::put('/{id}', [OrderController::class, 'markAsDone'])->name('orders.done');

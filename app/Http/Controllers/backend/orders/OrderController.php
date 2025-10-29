@@ -80,4 +80,13 @@ class OrderController extends Controller
         return CheackOrderResourcse::collection($cheack);
     }
 
+    public function cancelOrder($id)
+    {
+        // Find the order by ID
+        $cancel = $this->orderService->cancelOrderList($id);
+
+        return $cancel;
+    }
+
+
 }

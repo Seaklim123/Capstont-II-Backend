@@ -32,6 +32,11 @@ class OrderService
         $order = $this->orderRepository->getOrderBynumber($id);
         return $order;
     }
+    public function cancelOrderList(int $id){
+        
+        $order = $this->orderRepository->cancelList($id);
+        return $order;
+    }
     public function getOrderByStatus( $status){
         
         $order = $this->orderRepository->getOrderByStatus($status);

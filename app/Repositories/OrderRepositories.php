@@ -67,8 +67,9 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
         return $order;
     }
 
-    public function acceptOrder(array $data, int $id){
-        return DB::transaction(function () use ($data, $id) {
+    public function acceptOrder(array $data, int $id)
+{
+    return DB::transaction(function () use ($data, $id) {
         $order = OrderInformation::with('orderLists')->find($id);
 
         if (!$order) {
@@ -82,27 +83,47 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
             throw new \Exception('Invalid status value.');
         }
 
+        // Update main order
         $order->status = $data['status'];
         $order->save();
 
-        // Update all related order lists to match the new status
+        // Update each orderList, but skip ones already cancelled
         foreach ($order->orderLists as $orderList) {
-            $orderList->status = $data['status']; // ✅ Now dynamic
+            if ($orderList->status === 'cancel') {
+                // 🔸 Skip already-cancelled items
+                continue;
+            }
+
+            // Update others to match main order status
+            $orderList->status = $data['status'];
             $orderList->save();
         }
 
-        // Optionally, update carts back to "completed" if order done
-        // if ($data['status'] === 'completed') {
-        //     $tableId = $order->orderLists->first()?->table_id;
-        //     if ($tableId) {
-        //         Cart::where('table_id', $tableId)
-        //             ->update(['status' => 'completed']);
-        //     }
-        // }
-
         return $order->load('orderLists');
     });
+
+    
+}
+public function cancelList($id){
+            $order = OrderList::where('id', $id)->first();
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order not found'
+            ], 404);
+        }
+
+        // Update the status to 'cancel'
+        $order->status = 'cancel';
+        $order->save();
+
+        return response()->json([
+            'message' => 'Order has been cancelled successfully',
+            'data' => $order
+        ], 200);
     }
+
+
 
     public function getOrderByStatus($status){
         $order = OrderInformation::with([
