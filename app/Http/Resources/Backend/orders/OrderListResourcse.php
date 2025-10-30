@@ -18,11 +18,8 @@ class OrderListResourcse extends JsonResource
         return [
             'id' => $this->id,
             'numberOrder' => $this->numberOrder,
-            'note' => $this->note,
-            'quantity' => $this->quantity,
             'status' => $this->status,
             'cart_id' => $this->cart_id,
-            'table_id' => $this->table_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'cart' => new CartResource($this->whenLoaded('cart')),

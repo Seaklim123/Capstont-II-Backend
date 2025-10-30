@@ -21,8 +21,12 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
             }
 
             $numberOrder = time(); // can replace with custom generator later
+            
+            $totalPrice = $carts->sum(function ($cart) {
+            $priceProduct = $cart->product->price - $cart->product->discount;
+            return $priceProduct * $cart->quantity;
+            });
 
-            $totalPrice = $carts->sum(fn($cart) => $cart->product->price * $cart->quantity);
 
             $orderInfo = OrderInformation::create([
                 'numberOrder' => $numberOrder,
@@ -51,6 +55,9 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
             'orderLists.cart.tableNumber'  // ✅ relationship, not column
         ])->get();
     }
+    public function coutRefune($number){
+        
+    }
     public function getOrderById($id){
         $order = OrderInformation::with([
             'orderLists.cart.product',     // ✅ relationship, not column
@@ -60,70 +67,104 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
         return $order;
     }
     public function getOrderBynumber($id){
-        $order = OrderInformation::with([
+        $orders = OrderInformation::with([
             'orderLists.cart.product',     // ✅ relationship, not column
             'orderLists.cart.tableNumber'  // ✅ relationship, not column
         ])->where('numberOrder', $id)->get();
+        $orders->map(function ($order) {
+        $refundTotal = 0;
+
+        foreach ($order->orderLists as $orderList) {
+            if ($orderList->status === 'cancel') {
+                $product = $orderList->cart->product;
+                $refundTotal += ($product->price - $product->discount) * $orderList->cart->quantity;
+            }
+        }
+
+        // Add refund attribute dynamically
+        $order->refund = $refundTotal;
+        $order->priceperorder = $order->totalPrice - $refundTotal;
+
         return $order;
+    });
+
+    return response()->json([
+        'data' => $orders
+    ]);
     }
 
     public function acceptOrder(array $data, int $id)
-{
-    return DB::transaction(function () use ($data, $id) {
-        $order = OrderInformation::with('orderLists')->find($id);
+        {
+            return DB::transaction(function () use ($data, $id) {
+                $order = OrderInformation::with([
+                    'orderLists.cart.product', 
+                    'orderLists.cart.tableNumber'
+                ])->find($id);
 
-        if (!$order) {
-            throw new \Exception('Order not found.');
+                if (!$order) {
+                    throw new \Exception('Order not found.');
+                }
+
+                // ✅ Validate status
+                $validStatuses = ['pending', 'accepted', 'cancel'];
+                if (!in_array($data['status'], $validStatuses)) {
+                    throw new \Exception('Invalid status value.');
+                }
+
+                // ✅ Update main order status
+                $order->status = $data['status'];
+                $order->save();
+
+                $refundTotal = 0;
+
+                // ✅ Loop through all order lists
+                foreach ($order->orderLists as $orderList) {
+                    // Skip items already canceled
+                    if ($orderList->status === 'cancel') {
+                        // If cart exists, calculate refund
+                        if ($orderList->cart && $orderList->cart->product) {
+                            $price = (float) $orderList->cart->product->price;
+                            $quantity = (int) ($orderList->cart->quantity ?? 1);
+                            $refundTotal += $price * $quantity;
+                        }
+                        continue;
+                    }
+
+                    // Otherwise, update status normally
+                    $orderList->status = $data['status'];
+                    $orderList->save();
+                }
+
+                // ✅ Update refund amount in the main order
+                $order->refund = $refundTotal;
+                $order->save();
+
+                // ✅ Reload full order info with relationships
+                return $order->load([
+                    'orderLists.cart.product',
+                    'orderLists.cart.tableNumber'
+                ]);
+            });
         }
 
-        // Validate and update order status
-        $validStatuses = ['pending', 'accepted', 'cancel'];
-
-        if (!in_array($data['status'], $validStatuses)) {
-            throw new \Exception('Invalid status value.');
-        }
-
-        // Update main order
-        $order->status = $data['status'];
-        $order->save();
-
-        // Update each orderList, but skip ones already cancelled
-        foreach ($order->orderLists as $orderList) {
-            if ($orderList->status === 'cancel') {
-                // 🔸 Skip already-cancelled items
-                continue;
-            }
-
-            // Update others to match main order status
-            $orderList->status = $data['status'];
-            $orderList->save();
-        }
-
-        return $order->load('orderLists');
-    });
-
-    
-}
-public function cancelList($id){
+    public function cancelList($id){
             $order = OrderList::where('id', $id)->first();
 
-        if (!$order) {
+            if (!$order) {
+                return response()->json([
+                    'message' => 'Order not found'
+                ], 404);
+            }
+
+            // Update the status to 'cancel'
+            $order->status = 'cancel';
+            $order->save();
+
             return response()->json([
-                'message' => 'Order not found'
-            ], 404);
+                'message' => 'Order has been cancelled successfully',
+                'data' => $order
+            ], 200);
         }
-
-        // Update the status to 'cancel'
-        $order->status = 'cancel';
-        $order->save();
-
-        return response()->json([
-            'message' => 'Order has been cancelled successfully',
-            'data' => $order
-        ], 200);
-    }
-
-
 
     public function getOrderByStatus($status){
         $order = OrderInformation::with([
@@ -131,8 +172,5 @@ public function cancelList($id){
             'orderLists.cart.tableNumber'  // ✅ relationship, not column
         ])->where('order_informations.status', $status)->get();
         return $order;
-    }
-
-
-    
+    }  
 }

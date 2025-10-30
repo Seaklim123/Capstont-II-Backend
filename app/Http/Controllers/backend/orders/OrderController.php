@@ -28,6 +28,8 @@ class OrderController extends Controller
             'payment' => 'required|in:card,cash',
             'phone_number' => 'nullable|string|regex:/^[0-9+\-\s]{8,15}$/'
         ]);
+        // dd(vars: $validated);
+
         try {
             $order = $this->orderService->startOrder(
                 $request->table_id,
@@ -67,7 +69,7 @@ class OrderController extends Controller
     public function findByNumber($id){
         $orders = $this->orderService->getOrderBynumber($id);
 
-        return CheackOrderResourcse::collection($orders);
+        return $orders;
     }
     public function markAsDone(UpdateStatusOrderRequest $request, $id)
     {

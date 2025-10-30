@@ -24,6 +24,7 @@ class CheackOrderResourcse extends JsonResource
                 'discount' => $this->discount,
                 'status' => $this->status,
                 'payment' => $this->payment,
+                'refund' => $this->refund,
                 'phonenumber' => $this->phone_number,
                 'order_lists' => OrderListResourcse::collection($this->whenLoaded('orderLists')),
                 'created_at' => $this->created_at,
