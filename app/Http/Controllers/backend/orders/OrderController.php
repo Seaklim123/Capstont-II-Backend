@@ -69,7 +69,7 @@ class OrderController extends Controller
     public function findByNumber($id){
         $orders = $this->orderService->getOrderBynumber($id);
 
-        return $orders;
+        return CheackOrderResourcse::collection($orders);
     }
     public function markAsDone(UpdateStatusOrderRequest $request, $id)
     {

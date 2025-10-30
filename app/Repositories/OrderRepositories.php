@@ -88,9 +88,8 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
         return $order;
     });
 
-    return response()->json([
-        'data' => $orders
-    ]);
+    return $orders;
+
     }
 
     public function acceptOrder(array $data, int $id)
