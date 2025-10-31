@@ -6,10 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @method static find(int $id)
- * @method static create(TableNumber $table)
- */
 class TableNumber extends Model
 {
     use HasFactory;
@@ -23,6 +19,6 @@ class TableNumber extends Model
 
     public function cart(): HasMany
     {
-        return $this->hasMany(Cart::class, 'table_number_id', 'id');
+        return $this->hasMany(Cart::class, 'table_id', 'id');
     }
 }

@@ -42,6 +42,7 @@ protected $cartService;
 
     public function update(UpdateCartRequest $request, int $id)
     {
+        // dd($request->validated(), $id);
         $cart = $this->cartService->updateCart($id, $request->validated());
         return new CartResource($cart);
     }

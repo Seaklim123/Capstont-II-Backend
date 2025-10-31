@@ -15,18 +15,21 @@ class CartRepositories implements CartRepositoriesInterfaces{
 
     public function getAll()
     {
-        return $this->model->with(['product', 'table'])->get();
+        return $this->model->with(['product'])
+        // ->select('carts.*', 'products.price', 'products.name', 'products.description', 'products.id')
+        ->get();
     }
 
     public function findById(int $id)
     {
-        return $this->model->with(['product', 'table'])->findOrFail($id);
+        return $this->model->with(['product'])->findOrFail($id);
     }
     public function findBytable(int $id)
     {
         return $this->model->where('table_id', $id)
             ->join('products','products.id','=','carts.product_id')
              ->where('carts.status', 'starting')
+             ->select('carts.*', 'products.price', 'products.name', 'products.description', 'products.id')
              ->get();
     }
 
