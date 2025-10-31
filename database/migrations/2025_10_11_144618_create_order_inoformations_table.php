@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status', ['starting', 'accepted', 'cancel'])->default('starting');
             $table->enum('payment', ['card', 'cash'])->default('cash');
             $table->longText('note')->nullable();
-            $table->double('')->default(0)->nullable();
+            $table->double('refund')->default(0)->nullable();
             $table->string('phone_number')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->timestamps();

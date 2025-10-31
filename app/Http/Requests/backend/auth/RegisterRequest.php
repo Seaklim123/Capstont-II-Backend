@@ -24,9 +24,18 @@ class RegisterRequest extends FormRequest
     {
         return [
             'username' => 'required|string|between:4,20|unique:users,username',
-            'password' => 'required|string|between:4,8|confirmed',
+            'password' => 'required|string|min:4|max:8|confirmed',
             'role' => 'required|string|in:founder_restaurant',
             'status' => 'required|string|in:active,inactive',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'username.unique' => 'This username is already taken.',
+            'password.confirmed' => 'Passwords do not match.',
+        ];
+    }
+
 }

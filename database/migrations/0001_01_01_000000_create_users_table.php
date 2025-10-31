@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique()->required();
             $table->enum('role', ['founder_restaurant', 'cashier'])->default('founder_restaurant');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->required();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();

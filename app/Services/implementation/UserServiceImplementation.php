@@ -5,7 +5,7 @@ namespace App\Services\implementation;
 use App\Dtos\UserDto;
 use App\Exceptions\UserNotFoundException;
 use App\Models\User;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\implement\UserRepositoryImplementation;
 use App\Services\Interface\UserServiceInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -13,8 +13,14 @@ use Illuminate\Support\Facades\Hash;
 class UserServiceImplementation implements UserServiceInterface
 {
 
+    protected UserRepositoryImplementation $userRepository;
 
-    public function __construct(private UserRepositoryInterface $userRepository){}
+    public function __construct(UserRepositoryImplementation $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+
 
     /**
      * @throws UserNotFoundException
@@ -27,6 +33,9 @@ class UserServiceImplementation implements UserServiceInterface
         return $this->userRepository->registerUser($userDto);
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     public function loginUser(string $username, string $password): ?string
     {
         $user = $this->userRepository->findUserByUsername($username);
@@ -36,21 +45,36 @@ class UserServiceImplementation implements UserServiceInterface
         return $user->createToken('auth_token')->plainTextToken;
     }
 
-    public function getAllUser(): Collection
+    /**
+     * @throws UserNotFoundException
+     */
+    public function findUserByUsername(string $username): ?User {
+        return $this->userRepository->findUserByUsername($username);
+    }
+    public function getAllUsers(): Collection
     {
         return $this->userRepository->getAllUsers();
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     public function getUserById(int $id): ?User
     {
         return $this->userRepository->getUserById($id);
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     public function updateUserById(UserDto $userDto, int $id): ?User
     {
        return $this->userRepository->updateUserById($userDto, $id);
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     public function deleteUserById(int $id): ?User{
         return $this->userRepository->deleteUserById($id);
     }
@@ -65,10 +89,5 @@ class UserServiceImplementation implements UserServiceInterface
             throw new UserNotFoundException('Founder can not be create');
         }
         return $this->userRepository->createCashier($userDto);
-    }
-
-    public function loginUser(UserDto $userDto): User
-    {
-        return $this->userRepository->loginUser($userDto);
     }
 }

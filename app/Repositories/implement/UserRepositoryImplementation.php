@@ -25,16 +25,16 @@ class UserRepositoryImplementation implements UserRepositoryInterface
      */
     public function findUserByUsername(string $username): ?User
     {
-       $user = User::where("username", $username)->first();
-       if(!$user){
-           throw new UserNotFoundException();
-       }
-       return $user;
+        $user = User::where("username", $username)->first();
+        if(!$user){
+            throw new UserNotFoundException();
+        }
+        return $user;
     }
 
     public function getAllUsers(): Collection
     {
-       return User::all();
+        return User::all();
     }
 
     /**

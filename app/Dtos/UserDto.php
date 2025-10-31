@@ -7,7 +7,7 @@ class UserDto
     public function __construct(
         public string $username,
         public string $password,
-        public string $role = 'founder_restaurant',
-        public string $status = 'active'
+        public ?string $role = 'founder_restaurant',
+        public ?string $status = 'active'
     ){}
 }
