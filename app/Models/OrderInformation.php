@@ -9,16 +9,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OrderInformation extends Model
 {
     use HasFactory;
-    protected $table = 'order_information';
+    protected $table = 'order_informations';
     protected $fillable = [
         'numberOrder',
         'totalPrice',
         'discount',
         'status',
-        'payment'
+        'payment',
+        'note',
+        'refund',
+        'phone_number',
+        'user_id'
     ];
 
-    public function orderlist(): BelongsTo{
-        return $this->belongsTo(OrderList::class, 'orderlist_id', 'id');
+    public function orderLists()
+    {
+        return $this->hasMany(OrderList::class, 'numberOrder', 'numberOrder');
+    }
+    public function users()
+    {
+        return $this->hasOne(User::class);
     }
 }

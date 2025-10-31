@@ -13,7 +13,7 @@ class Products extends Model
     protected $table = 'products';
     protected $fillable = [
         'name',
-        'imagePath',
+         'image_path',  
         'price',
         'discount',
         'description',

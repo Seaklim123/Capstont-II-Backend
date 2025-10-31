@@ -66,4 +66,9 @@ class UserServiceImplementation implements UserServiceInterface
         }
         return $this->userRepository->createCashier($userDto);
     }
+
+    public function loginUser(UserDto $userDto): User
+    {
+        return $this->userRepository->loginUser($userDto);
+    }
 }

@@ -21,8 +21,9 @@ class CartResource extends JsonResource
             'note' => $this->note,
             'quantity' => $this->quantity,
             'status' => $this->status,
+            'table_id' => $this->table_id,
             'product' => new ProductResource($this->whenLoaded('product')),
-            'table' => new TableNumberResource($this->whenLoaded('table')),
+            'table_number' => new TableNumberResource($this->whenLoaded('tableNumber')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
