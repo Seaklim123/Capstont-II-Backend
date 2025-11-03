@@ -27,7 +27,7 @@ class UserRepositoryImplementation implements UserRepositoryInterface
     {
         $user = User::where("username", $username)->first();
         if(!$user){
-            throw new UserNotFoundException();
+            throw new UserNotFoundException('User not found');
         }
         return $user;
     }
@@ -44,7 +44,7 @@ class UserRepositoryImplementation implements UserRepositoryInterface
     {
         $user = User::where("id", $id)->first();
         if(!$user){
-            throw new UserNotFoundException();
+            throw new UserNotFoundException('User not found');
         }
         return $user;
     }
@@ -56,7 +56,7 @@ class UserRepositoryImplementation implements UserRepositoryInterface
     {
         $user = User::where("id", $id)->first();
         if(!$user){
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("User not found");
         }
         $userModelUpdate = UserMapper::userMapper($userDto);
         $user->update($userModelUpdate->getAttributes());
@@ -70,9 +70,10 @@ class UserRepositoryImplementation implements UserRepositoryInterface
     {
         $user = User::where("id", $id)->first();
         if(!$user){
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("Invalid with User ID");
         }
-        return $user->delete();
+        $user->delete();
+        return $user;
     }
 
 
