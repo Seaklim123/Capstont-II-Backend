@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 class UserController extends Controller
 {
 
-    public function __construct(private UserServiceInterface $userService){}
+    public function __construct(protected UserServiceInterface $userService){}
     public function sayhell(): string {
         return 'Hello World';
     }
@@ -22,10 +22,10 @@ class UserController extends Controller
      */
     public function index() : JsonResponse
     {
-        $user = $this->userService->getAllUser();
+        $user = $this->userService->getAllUsers();
         return response()->json([
             'message' => 'Get all user',
-            'data' => $user
+            'data' => UserResource::collection($user)
         ]);
     }
 
