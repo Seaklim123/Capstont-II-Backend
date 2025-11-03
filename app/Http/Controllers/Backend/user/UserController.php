@@ -43,6 +43,7 @@ class UserController extends Controller
         ], 201);
     }
 
+    // get user by id
     /**
      * Display the specified resource.
      */
