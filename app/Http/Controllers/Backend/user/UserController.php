@@ -36,8 +36,9 @@ class UserController extends Controller
     {
         $userDto = new UserDto(...$request->validated());
         $user = $this->userService->createCashier($userDto);
+
         return response()->json([
-            'message' => 'Create cashier',
+            'message' => 'Create cashier by owner restaurant',
             'data' => new UserResource($user)
         ], 201);
     }
