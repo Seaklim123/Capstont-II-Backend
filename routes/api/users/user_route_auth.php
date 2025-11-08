@@ -8,7 +8,6 @@ use App\Http\Controllers\Backend\table\TableNumberController;
 use App\Http\Controllers\Backend\user\UserController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::prefix('admin')->group(function () {
     Route::get('/hello', [TableNumberController::class, 'hello']);
     // Tables
