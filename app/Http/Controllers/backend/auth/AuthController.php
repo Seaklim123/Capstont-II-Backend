@@ -16,11 +16,11 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse{
         $userDto = new UserDto(...$request->validated());
-        $user =  $this->userService->registerUser($userDto);
-        return new JsonResponse([
-            'message' => 'User successfully registered',
-            'user' => new AuthResource($user)
-        ], 201);
+       $user =  $this->userService->registerUser($userDto);
+       return new JsonResponse([
+           'message' => 'User successfully registered',
+           'user' => new AuthResource($user)
+       ], 201);
     }
 
     public function login(LoginRequest $request): JsonResponse {
