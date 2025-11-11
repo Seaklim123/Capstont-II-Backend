@@ -8,9 +8,11 @@ use App\Repositories\implement\TableNumberRepositoryImplementation;
 use App\Repositories\implement\UserRepositoryImplementation;
 use App\Repositories\Interfaces\CartRepositoriesInterfaces;
 use App\Repositories\Interfaces\CategoryRepositoriesInterfaces;
+use App\Repositories\Interfaces\OrderRepositoriesInterfaces;
 use App\Repositories\Interfaces\ProductRepositoriesInterfaces;
 use App\Repositories\Interfaces\TableNumberRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\OrderRepositories;
 use App\Repositories\ProductRepositories;
 use App\Services\implementation\UserServiceImplementation;
 use App\Services\Interface\UserServiceInterface;
@@ -30,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CartRepositoriesInterfaces::class , CartRepositories::class);
         $this->app->bind(UserRepositoryInterface::class , UserRepositoryImplementation::class);
         $this->app->bind(UserServiceInterface::class , UserServiceImplementation::class);
+        $this->app->bind(OrderRepositoriesInterfaces::class , OrderRepositories::class);
+        
 
     }
 

@@ -30,4 +30,9 @@ class OrderInformation extends Model
     {
         return $this->hasOne(User::class);
     }
+    public function payment()
+    {
+        return $this->hasOne(\App\Models\Payment::class);
+    }
+
 }

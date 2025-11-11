@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Backend\cart\CartController;
 use App\Http\Controllers\Backend\category\CategoryController;
+use App\Http\Controllers\backend\orders\OrderController;
 use App\Http\Controllers\Backend\orders\OrderListController;
+use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
 use App\Http\Controllers\Backend\table\TableNumberController;
 use App\Http\Controllers\Backend\user\UserController;
@@ -55,17 +57,22 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::prefix('orders')->group(function () {
-        Route::get('/', [OrderListController::class, 'index']);
-        Route::get('/{id}', [OrderListController::class, 'show']);
-        Route::post('/', [OrderListController::class, 'store']);
-        Route::put('/{id}', [OrderListController::class, 'update']);
-        Route::delete('/{id}', [OrderListController::class, 'destroy']);
-        Route::get('/status', [OrderListController::class, 'getByStatus']);
-        Route::get('/findByNumber/{id}', [OrderListController::class, 'findByNumber']);
-        Route::put('/markAsDone/{id}', [OrderListController::class, 'markAsDone']);
-        Route::get('/checkOrder', [OrderListController::class, 'checkOrder']);
-        Route::get('/cancelOrder', [OrderListController::class, 'cancelOrder']);
-
+        Route::get('/', [OrderController::class, 'index']);
+        // Route::get('/{id}', [OrderController::class, 'show']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::put('/{id}', [OrderController::class, 'update']);
+        Route::delete('/{id}', [OrderController::class, 'destroy']);
+        Route::get('/status', [OrderController::class, 'getByStatus']);
+        Route::get('/findByNumber/{id}', [OrderController::class, 'findByNumber']);
+        Route::put('/markAsDone/{id}', [OrderController::class, 'markAsDone']);
+        Route::get('/checkOrder', [OrderController::class, 'checkOrder']);
+        Route::put('/cancelOrder/{id}', [OrderController::class, 'cancelOrder']);
     });
+    Route::prefix('payment')->group(function () {
+        Route::post('/create', [PaymentController::class, 'createPayment']);
+        Route::get('/success', [PaymentController::class, 'paymentSuccess']);
+        Route::get('/cancel', [PaymentController::class, 'paymentCancel']);
+    });
+
 
 });
