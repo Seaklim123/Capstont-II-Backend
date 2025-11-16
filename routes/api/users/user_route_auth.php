@@ -58,10 +58,8 @@ Route::prefix('admin')->group(function () {
 
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
-        // Route::get('/{id}', [OrderController::class, 'show']);
         Route::post('/', [OrderController::class, 'store']);
         Route::put('/{id}', [OrderController::class, 'update']);
-        Route::delete('/{id}', [OrderController::class, 'destroy']);
         Route::get('/status', [OrderController::class, 'getByStatus']);
         Route::get('/findByNumber/{id}', [OrderController::class, 'findByNumber']);
         Route::put('/markAsDone/{id}', [OrderController::class, 'markAsDone']);
