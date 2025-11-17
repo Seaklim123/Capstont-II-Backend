@@ -8,16 +8,15 @@ use Illuminate\Support\Collection;
 
 interface UserRepositoryInterface
 {
-    public function findUserByUsername(string $username): ?User;
-    public function registerUser(UserDto $userDto): User;
+    public function findByUsername(string $username): ?User;
 
-    public function getAllUsers(): Collection;
+    public function findById(int $id): ?User;
 
-    public function getUserById(int $id): ?User;
+    public function create(UserDto $userDto): User;
 
-    public function updateUserById(UserDto $userDto, int $id): ?User;
+    public function getAll(): Collection;
 
-    public function deleteUserById(int $id): ?User;
+    public function update(UserDto $userDto, int $id): User;
 
-    public function createCashier(UserDto $userDto): User;
+    public function delete(int $id): bool;
 }

@@ -6,30 +6,33 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique()->required();
-            $table->enum('role', ['founder_restaurant', 'cashier'])->default('founder_restaurant');
-            $table->string('password')->required();
+            $table->string('username', 30)->unique();
+            $table->string('email', 50)->unique()->nullable();
+            $table->string('password');
+            $table->string('primary_phone', 20)->unique();
+            $table->string('secondary_phone', 20)->unique()->nullable();
+            $table->enum('role', ['admin', 'cashier'])->default('admin');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->index('role');
+            $table->index('status');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('username')->primary();
-            $table->string('token')->index();
+            $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->index()->constrained()->cascadeOnDelete();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -37,9 +40,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('sessions');

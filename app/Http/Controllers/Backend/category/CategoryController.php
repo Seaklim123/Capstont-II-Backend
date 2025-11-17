@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
 
     protected $categoryServices;
-      public function __construct(CategoryServices $categoryServices){
+    public function __construct(CategoryServices $categoryServices){
         $this->categoryServices = $categoryServices;
     }
     /**
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         $category = $this->categoryServices->updateCategory($id, $data);
 
         return new CategoryResource($category);
-        }
+    }
 
     /**
      * Remove the specified resource from storage.

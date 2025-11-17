@@ -23,8 +23,8 @@ class CategoryRepositories implements CategoryRepositoriesInterfaces{
     public function updateCategory(int $id, $data)
     {
         $category = Category::find($id);
-         $category->update($data);
-         return $category;
+        $category->update($data);
+        return $category;
     }
 
     public function deleteCategory(int $id)

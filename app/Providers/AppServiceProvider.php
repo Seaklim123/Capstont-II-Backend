@@ -26,12 +26,12 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        $this->app->bind(CategoryRepositoriesInterfaces::class , CategoryRepositories::class);
-        $this->app->bind(ProductRepositoriesInterfaces::class , ProductRepositories::class);
-        $this->app->bind(TableNumberRepositoryInterface::class , TableNumberRepositoryImplementation::class);
-        $this->app->bind(CartRepositoriesInterfaces::class , CartRepositories::class);
         $this->app->bind(UserRepositoryInterface::class , UserRepositoryImplementation::class);
         $this->app->bind(UserServiceInterface::class , UserServiceImplementation::class);
+        $this->app->bind(TableNumberRepositoryInterface::class , TableNumberRepositoryImplementation::class);
+        $this->app->bind(CategoryRepositoriesInterfaces::class , CategoryRepositories::class);
+        $this->app->bind(ProductRepositoriesInterfaces::class , ProductRepositories::class);
+        $this->app->bind(CartRepositoriesInterfaces::class , CartRepositories::class);
         $this->app->bind(OrderRepositoriesInterfaces::class , OrderRepositories::class);
     }
 
