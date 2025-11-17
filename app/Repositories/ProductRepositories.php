@@ -31,4 +31,14 @@ public function all()
         $product = Products::findOrFail($id);
         return $product->delete();
     }
+
+    public function getBestSellers()
+    {
+        return Products::where('is_best_seller', true)->get();
+    }
+
+    public function getDiscounts()
+    {
+        return Products::where('discount', '>', 0)->get();
+    }
 }

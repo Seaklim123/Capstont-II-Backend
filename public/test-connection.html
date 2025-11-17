@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔌 Backend Connection Tester</h1>
+    
+    <div class="info status">
+        <strong>Laravel Backend:</strong> http://127.0.0.1:8000<br>
+        Click the button below to test the connection
+    </div>
+
+    <button onclick="testConnection()">Test Backend Connection</button>
+
+    <div id="results"></div>
+
+    <script>
+        async function testConnection() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="info status">Testing connection...</div>';
+
+            const tests = [
+                { name: 'Health Check', url: 'http://127.0.0.1:8000/api/health' },
+                { name: 'Categories API', url: 'http://127.0.0.1:8000/api/categories' },
+                { name: 'Products API', url: 'http://127.0.0.1:8000/api/products' },
+                { name: 'Tables API', url: 'http://127.0.0.1:8000/api/tables' },
+            ];
+
+            let html = '<h2>Test Results:</h2>';
+
+            for (const test of tests) {
+                try {
+                    const response = await fetch(test.url);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        html += `
+                            <div class="success status">
+                                <strong>✅ ${test.name}</strong><br>
+                                Status: ${response.status} OK<br>
+                                <details>
+                                    <summary>View Response</summary>
+                                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                                </details>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="error status">
+                                <strong>❌ ${test.name}</strong><br>
+                                Status: ${response.status}<br>
+                                Error: ${JSON.stringify(data)}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    html += `
+                        <div class="error status">
+                            <strong>❌ ${test.name}</strong><br>
+                            Connection Failed: ${error.message}<br>
+                            <strong>Possible causes:</strong><br>
+                            • Backend server is not running (run: php artisan serve)<br>
+                            • CORS is blocking the request<br>
+                            • Wrong URL or port
+                        </div>
+                    `;
+                }
+            }
+
+            // Test image access
+            html += '<h3>Image Access Test:</h3>';
+            const testImage = 'http://127.0.0.1:8000/Image/Appetizers.jpg';
+            html += `
+                <div class="info status">
+                    <strong>Test Image URL:</strong><br>
+                    <a href="${testImage}" target="_blank">${testImage}</a><br>
+                    <img src="${testImage}" alt="Test" style="max-width: 200px; margin-top: 10px;" 
+                         onload="this.parentElement.className='success status'" 
+                         onerror="this.parentElement.className='error status'; this.style.display='none';">
+                </div>
+            `;
+
+            resultsDiv.innerHTML = html;
+        }
+
+        // Auto-test on page load
+        window.onload = () => {
+            testConnection();
+        };
+    </script>
+</body>
+</html>

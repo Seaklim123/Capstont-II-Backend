@@ -46,4 +46,16 @@ class ProductController extends Controller
         $this->productService->deleteProduct($id);
         return response()->json(['message' => 'Category deleted successfully']);
     }
+
+    public function bestSellers()
+    {
+        $products = $this->productService->getBestSellers();
+        return ProductResource::collection($products);
+    }
+
+    public function discounts()
+    {
+        $products = $this->productService->getDiscounts();
+        return ProductResource::collection($products);
+    }
 }

@@ -13,12 +13,12 @@ class Products extends Model
     protected $table = 'products';
     protected $fillable = [
         'name',
-        'imagePath',
+        'image',
         'price',
         'discount',
         'description',
-        'status',
         'category_id',
+        'is_best_seller',
     ];
 
     public function category(): BelongsTo{

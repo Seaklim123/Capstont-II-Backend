@@ -53,4 +53,14 @@ class ProductServices{
         }
         return $this->productRepository->delete($id);
     }
+
+    public function getBestSellers()
+    {
+        return $this->productRepository->getBestSellers();
+    }
+
+    public function getDiscounts()
+    {
+        return $this->productRepository->getDiscounts();
+    }
 }

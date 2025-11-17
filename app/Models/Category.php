@@ -12,7 +12,7 @@ class Category extends Model
     protected $table = 'categories';
     protected $fillable = [
         'name',
-        'image_path',
+        'image',
     ];
 
     public function products(): HasMany{
