@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Backend\auth\AuthController;
 use App\Http\Controllers\Backend\cart\CartController;
+use App\Http\Controllers\Backend\category\CategoryController;
 use App\Http\Controllers\backend\orders\OrderController;
 use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
@@ -11,6 +12,14 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index']);
+        Route::get('/{id}', [CategoryController::class, 'show']);
+        Route::post('/', [CategoryController::class, 'store']);
+        Route::put('/{id}', [CategoryController::class, 'update']);
+        Route::delete('/{id}', [CategoryController::class, 'destroy']);
+    });
 
     Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
