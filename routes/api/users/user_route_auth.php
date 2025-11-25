@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\auth\AuthController;
 use App\Http\Controllers\Backend\cart\CartController;
 use App\Http\Controllers\Backend\category\CategoryController;
+use App\Http\Controllers\Backend\dashboard\DashboardController;
 use App\Http\Controllers\Backend\orders\OrderListController;
 use App\Http\Controllers\Backend\product\ProductController;
 use App\Http\Controllers\Backend\table\TableNumberController;
@@ -59,6 +60,27 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::put('/{id}', [ProductController::class, 'update']);
         Route::delete('/{id}', [ProductController::class, 'destroy']);
+    });
+
+    Route::prefix('dashboard')->group(function () {
+        // Main dashboard statistics
+        Route::get('/', [DashboardController::class, 'index']);
+
+        // Products
+        Route::get('/top-products', [DashboardController::class, 'topProducts']);
+        Route::get('/search/products', [DashboardController::class, 'searchProducts']);
+
+        // Categories
+        Route::get('/search/categories', [DashboardController::class, 'searchCategories']);
+        Route::get('/category-performance', [DashboardController::class, 'categoryPerformance']);
+
+        // Earnings
+        Route::get('/earnings', [DashboardController::class, 'earnings']);
+        Route::get('/earnings/chart', [DashboardController::class, 'earningsChart']);
+        Route::get('/financial-summary', [DashboardController::class, 'financialSummary']);
+
+        // Orders
+        Route::get('/orders', [DashboardController::class, 'orders']);
     });
 });
 
