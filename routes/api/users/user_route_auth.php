@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\category\CategoryController;
 use App\Http\Controllers\Backend\dashboard\DashboardController;
 use App\Http\Controllers\Backend\orders\OrderListController;
 use App\Http\Controllers\Backend\product\ProductController;
+use App\Http\Controllers\Backend\report\ReportController;
 use App\Http\Controllers\Backend\table\TableNumberController;
 use App\Http\Controllers\Backend\user\UserController;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,33 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         // Orders
         Route::get('/orders', [DashboardController::class, 'orders']);
     });
+
+    Route::prefix('reports')->group(function () {
+        // Basic Reports
+        Route::get('/total-earnings', [ReportController::class, 'getTotalEarnings']);
+        Route::get('/current-month-earnings', [ReportController::class, 'getCurrentMonthEarnings']);
+        Route::get('/total-cashiers', [ReportController::class, 'getTotalCashiers']);
+        Route::get('/products-most-earnings', [ReportController::class, 'getProductsMostOrderEarnings']);
+        Route::get('/monthly-earnings-chart', [ReportController::class, 'getMonthlyEarningsChart']);
+        Route::get('/detailed', [ReportController::class, 'getDetailedReport']);
+
+        // Additional Reports
+        Route::get('/summary', [ReportController::class, 'getSummaryReport']);
+        Route::get('/cashier-performance', [ReportController::class, 'getCashierPerformance']);
+        Route::get('/sales-summary', [ReportController::class, 'getSalesSummary']);
+        Route::get('/product-performance', [ReportController::class, 'getProductPerformance']);
+        Route::get('/category-revenue', [ReportController::class, 'getCategoryRevenue']);
+        Route::get('/daily-earnings', [ReportController::class, 'getDailyEarnings']);
+        Route::get('/order-status', [ReportController::class, 'getOrderStatus']);
+        Route::get('/payment-methods', [ReportController::class, 'getPaymentMethods']);
+        Route::get('/top-customers', [ReportController::class, 'getTopCustomers']);
+        Route::get('/revenue-comparison', [ReportController::class, 'getRevenueComparison']);
+
+        // Export Reports
+        Route::post('/export/pdf', [ReportController::class, 'generatePdf']);
+        Route::post('/export/excel', [ReportController::class, 'generateExcel']);
+    });
+
 });
 
 // Cashier routes
