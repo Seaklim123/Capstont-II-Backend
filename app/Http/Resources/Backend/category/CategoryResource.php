@@ -5,6 +5,13 @@ namespace App\Http\Resources\Backend\category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $name
+ * @property mixed $image_path
+ * @property mixed $created_at
+ * @property mixed $updated_at
+ */
 class CategoryResource extends JsonResource
 {
     /**

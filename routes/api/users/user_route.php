@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\Backend\auth\AuthController;
 use App\Http\Controllers\Backend\cart\CartController;
 use App\Http\Controllers\Backend\category\CategoryController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
 use Illuminate\Support\Facades\Route;
 
+<<<<<<< HEAD
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -46,6 +46,9 @@ Route::prefix('auth')->group(function () {
         Route::get('/cancel', [PaymentController::class, 'paymentCancel']);
     });
 
+=======
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+>>>>>>> 2a0322896c28ac6098a4041156f9ba15ca0a26bc
 });
-
-

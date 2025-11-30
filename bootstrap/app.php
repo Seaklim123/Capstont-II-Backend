@@ -8,23 +8,24 @@ use Illuminate\Support\Facades\Route;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         using: function () {
-            // Public API routes (no authentication required)
+            // Public API routes
             Route::prefix('api/v1')
                 ->name('api.')
                 ->group(base_path('routes/api/api.php'));
 
-            // Protected API routes (authentication required)
+            // Protected API routes with status check
             Route::prefix('api/v1')
                 ->name('api.')
-                ->middleware(['auth:sanctum'])
+                ->middleware(['auth:sanctum', 'check.user.status'])
                 ->group(base_path('routes/api/api_auth.php'));
         },
-        web: __DIR__ . '/../routes/web.php',
-        commands: __DIR__ . '/../routes/console.php',
-        health: '/up',
+    // ... rest of your config
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckUserRole::class,
+            'check.user.status' => \App\Http\Middleware\CheckUserStatus::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

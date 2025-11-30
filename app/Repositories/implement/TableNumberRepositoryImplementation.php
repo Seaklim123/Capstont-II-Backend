@@ -38,7 +38,7 @@ class TableNumberRepositoryImplementation implements TableNumberRepositoryInterf
     /**
      * @throws TableNumberNotFoundException
      */
-    public function updateTableNumber(TableNumberDto $tableNumberDto, int $id): ?TableNumber
+    public function updateTableNumber(TableNumberDto $tableNumberDto, int $id): TableNumber
     {
         $table = TableNumber::find($id);
         if(!$table){

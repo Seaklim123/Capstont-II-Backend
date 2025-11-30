@@ -16,6 +16,12 @@ return new class extends Migration
             $table->bigInteger('numberOrder');
             $table->double('totalPrice')->default(0)->nullable();
             $table->double('discount')->default(0)->nullable();
+<<<<<<< HEAD
+=======
+//            $table->foreignId('order_list_id')->constrained('order_lists');
+            $table->enum('status', ['starting', 'accepted', 'cancel'])->default('starting');
+            $table->enum('payment', ['card', 'cash'])->default('cash');
+>>>>>>> 2a0322896c28ac6098a4041156f9ba15ca0a26bc
             $table->longText('note')->nullable();
             $table->double('refund')->default(0)->nullable();
             $table->string('phone_number')->nullable();

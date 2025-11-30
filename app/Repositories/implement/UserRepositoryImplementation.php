@@ -11,76 +11,67 @@ use Illuminate\Support\Collection;
 
 class UserRepositoryImplementation implements UserRepositoryInterface
 {
-
-
-    public function registerUser(UserDto $userDto): User
+    /**
+     * @throws UserNotFoundException
+     */
+    public function findByUsername(string $username): ?User
     {
-        $user = UserMapper::userMapper($userDto);
+        $user = User::where('username', $username)->first();
+
+        if (!$user) {
+            throw new UserNotFoundException("User with username '{$username}' not found");
+        }
+
+        return $user;
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public function findById(int $id): ?User
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            throw new UserNotFoundException("User with ID {$id} not found");
+        }
+
+        return $user;
+    }
+
+    public function create(UserDto $userDto): User
+    {
+        $user = UserMapper::toModel($userDto);
         $user->save();
+
         return $user;
+    }
+
+    public function getAll(): Collection
+    {
+        return User::orderBy('created_at', 'desc')->get();
     }
 
     /**
      * @throws UserNotFoundException
      */
-    public function findUserByUsername(string $username): ?User
+    public function update(UserDto $userDto, int $id): User
     {
-        $user = User::where("username", $username)->first();
-        if(!$user){
-            throw new UserNotFoundException('User not found');
-        }
-        return $user;
-    }
+        $user = $this->findById($id);
 
-    public function getAllUsers(): Collection
-    {
-        return User::all();
+        $userData = UserMapper::toModel($userDto);
+        $user->update($userData->getAttributes());
+
+        return $user->fresh();
     }
 
     /**
      * @throws UserNotFoundException
      */
-    public function getUserById(int $id): ?User
+    public function delete(int $id): bool
     {
-        $user = User::where("id", $id)->first();
-        if(!$user){
-            throw new UserNotFoundException('User not found');
-        }
-        return $user;
+        $user = $this->findById($id);
+
+        return $user->delete();
     }
-
-    /**
-     * @throws UserNotFoundException
-     */
-    public function updateUserById(UserDto $userDto, int $id): ?User
-    {
-        $user = User::where("id", $id)->first();
-        if(!$user){
-            throw new UserNotFoundException("User not found");
-        }
-        $userModelUpdate = UserMapper::userMapper($userDto);
-        $user->update($userModelUpdate->getAttributes());
-        return $user;
-    }
-
-    /**
-     * @throws UserNotFoundException
-     */
-    public function deleteUserById(int $id): ?User
-    {
-        $user = User::where("id", $id)->first();
-        if(!$user){
-            throw new UserNotFoundException("Invalid with User ID");
-        }
-        $user->delete();
-        return $user;
-    }
-
-
-    public function createCashier(UserDto $userDto): User{
-        $user = UserMapper::userMapper($userDto);
-        $user->save();
-        return $user;
-    }
-
 }

@@ -19,12 +19,13 @@ class OrderInformation extends Model
         'note',
         'refund',
         'phone_number',
+        'order_list_id',
         'user_id'
     ];
 
-    public function orderLists()
+    public function orderLists(): BelongsTo
     {
-        return $this->hasMany(OrderList::class, 'numberOrder', 'numberOrder');
+        return $this->belongsTo(OrderList::class, 'order_list_id', 'id');
     }
     public function users()
     {
