@@ -23,6 +23,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    public function hello(): JsonResponse {
+        return new JsonResponse(['message' => 'Hello, World!'], 200);
+    }
     public function login(LoginRequest $request): JsonResponse {
         try {
             $token = $this->userService->loginUser(
