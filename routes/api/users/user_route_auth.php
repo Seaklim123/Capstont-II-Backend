@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\cart\CartController;
 use App\Http\Controllers\Backend\category\CategoryController;
 use App\Http\Controllers\Backend\dashboard\DashboardController;
 use App\Http\Controllers\Backend\orders\OrderListController;
+use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
 use App\Http\Controllers\Backend\report\ReportController;
 use App\Http\Controllers\Backend\table\TableNumberController;

@@ -45,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DashboardServiceInterface::class , DashboardService::class);
         $this->app->bind(ReportRepositoryInterface::class , ReportRepository::class);
         $this->app->bind(ReportServiceInterface::class , ReportService::class);
+        
     }
 
     /**

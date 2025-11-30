@@ -9,9 +9,10 @@ use App\Repositories\Interfaces\OrderRepositoriesInterfaces;
 use DB;
 
 class OrderRepositories implements OrderRepositoriesInterfaces{
-    public function startOrder(int $tableId, string $payment, string $phone_number )
+    public function startOrder(int $tableId, string $payment, ?string $phone_number = null)
     {
         return DB::transaction(function () use ($tableId, $payment, $phone_number) {
+            // 1️⃣ Fetch carts that are ready to order
             $carts = Cart::where('table_id', $tableId)
                 ->where('status', 'starting')
                 ->get();
@@ -20,51 +21,91 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
                 throw new \Exception('No items found in cart.');
             }
 
-            $numberOrder = time(); // can replace with custom generator later
+            // 2️⃣ Generate unique order number (better than just time())
+            $numberOrder = now()->timestamp . rand(100, 999);
 
+            // 3️⃣ Calculate total price
             $totalPrice = $carts->sum(function ($cart) {
-                $priceProduct = $cart->product->price - $cart->product->discount;
+                $product = $cart->product;
+                $priceProduct = $product->price - ($product->discount ?? 0);
                 return $priceProduct * $cart->quantity;
             });
 
-
+            // 4️⃣ Create main order info
             $orderInfo = OrderInformation::create([
-                'numberOrder' => $numberOrder,
-                'totalPrice' => $totalPrice,
-                'phone_number' => $phone_number,
-                'status' => 'starting',
-                'payment' => $payment,
+                'numberOrder'   => $numberOrder,
+                'totalPrice'    => $totalPrice,
+                'phone_number'  => $phone_number,
+                'status'        => 'starting', // ✅ valid value for your DB
+                'payment'       => $payment,
             ]);
 
+            // 5️⃣ Create order list entries
             foreach ($carts as $cart) {
                 OrderList::create([
                     'numberOrder' => $numberOrder,
-                    'status' => 'starting',
-                    'cart_id' => $cart->id,
+                    'status'      => 'starting', // ✅ changed from 'starting'
+                    'cart_id'     => $cart->id,
                 ]);
             }
 
+            // 6️⃣ Update cart status to mark them as ordered
             Cart::where('table_id', $tableId)->update(['status' => 'ordering']);
 
             return $orderInfo;
         });
     }
+
     public function getOrder(){
-        return OrderInformation::with([
+        $orders =  OrderInformation::with([
             'orderLists.cart.product',     // ✅ relationship, not column
             'orderLists.cart.tableNumber'  // ✅ relationship, not column
         ])->get();
+        $orders->map(function ($order) {
+            $refundTotal = 0;
+
+            foreach ($order->orderLists as $orderList) {
+                if ($orderList->status === 'cancel') {
+                    $product = $orderList->cart->product;
+                    $refundTotal += ($product->price - $product->discount) * $orderList->cart->quantity;
+                }
+            }
+
+            // Add refund attribute dynamically
+            $order->refund = $refundTotal;
+            $order->priceperorder = $order->totalPrice - $refundTotal;
+
+            return $order;
+        });
+
+        return $orders;
     }
     public function coutRefune($number){
 
     }
     public function getOrderById($id){
-        $order = OrderInformation::with([
+        $orders = OrderInformation::with([
             'orderLists.cart.product',     // ✅ relationship, not column
             'orderLists.cart.tableNumber'  // ✅ relationship, not column
         ])->where('id', $id)->get();
+            $orders->map(function ($order) {
+            $refundTotal = 0;
 
-        return $order;
+            foreach ($order->orderLists as $orderList) {
+                if ($orderList->status === 'cancel') {
+                    $product = $orderList->cart->product;
+                    $refundTotal += ($product->price - $product->discount) * $orderList->cart->quantity;
+                }
+            }
+
+            // Add refund attribute dynamically
+            $order->refund = $refundTotal;
+            $order->priceperorder = $order->totalPrice - $refundTotal;
+
+            return $order;
+        });
+
+        return $orders;
     }
     public function getOrderBynumber($id){
         $orders = OrderInformation::with([
