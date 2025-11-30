@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('order_informations', function (Blueprint $table) {
             $table->id();
-            $table->integer('numberOrder');
+            $table->bigInteger('numberOrder');
             $table->double('totalPrice')->default(0)->nullable();
             $table->double('discount')->default(0)->nullable();
-//            $table->foreignId('order_list_id')->constrained('order_lists');
-            $table->enum('status', ['starting', 'accepted', 'cancel'])->default('starting');
-            $table->enum('payment', ['card', 'cash'])->default('cash');
             $table->longText('note')->nullable();
             $table->double('refund')->default(0)->nullable();
             $table->string('phone_number')->nullable();
+            $table->enum('status', ['starting', 'accepted', 'cancel']);
+            $table->enum('payment', ['card', 'cash'])->default('cash');
+            $table->enum('payment_status', ['done', 'nondone'])->default('nondone');
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->timestamps();
         });
