@@ -3,12 +3,8 @@
 use App\Http\Controllers\Backend\auth\AuthController;
 use App\Http\Controllers\Backend\cart\CartController;
 use App\Http\Controllers\Backend\category\CategoryController;
-<<<<<<< HEAD
-use App\Http\Controllers\backend\orders\OrderController;
-=======
 use App\Http\Controllers\Backend\dashboard\DashboardController;
->>>>>>> 2a0322896c28ac6098a4041156f9ba15ca0a26bc
-use App\Http\Controllers\Backend\orders\OrderListController;
+use App\Http\Controllers\Backend\orders\OrderController;
 use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
 use App\Http\Controllers\Backend\report\ReportController;
@@ -89,6 +85,17 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/orders', [DashboardController::class, 'orders']);
     });
 
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::put('/{id}', [OrderController::class, 'update']);
+        Route::get('/status', [OrderController::class, 'getByStatus']);
+        Route::get('/findByNumber/{id}', [OrderController::class, 'findByNumber']);
+        Route::put('/markAsDone/{id}', [OrderController::class, 'markAsDone']);
+        Route::get('/checkOrder', [OrderController::class, 'checkOrder']);
+        Route::put('/cancelOrder/{id}', [OrderController::class, 'cancelOrder']);
+    });
+
     Route::prefix('reports')->group(function () {
         // Basic Reports
         Route::get('/total-earnings', [ReportController::class, 'getTotalEarnings']);
@@ -131,7 +138,6 @@ Route::prefix('cashier')->middleware('role:cashier')->group(function () {
 
     // Orders (full access)
     Route::prefix('orders')->group(function () {
-<<<<<<< HEAD
         Route::get('/', [OrderController::class, 'index']);
         Route::post('/', [OrderController::class, 'store']);
         Route::put('/{id}', [OrderController::class, 'update']);
@@ -148,25 +154,4 @@ Route::prefix('cashier')->middleware('role:cashier')->group(function () {
     });
 
 
-=======
-        Route::get('/', [OrderListController::class, 'index']);
-        Route::get('/{id}', [OrderListController::class, 'show']);
-        Route::post('/', [OrderListController::class, 'store']);
-        Route::put('/{id}', [OrderListController::class, 'update']);
-        Route::delete('/{id}', [OrderListController::class, 'destroy']);
-        Route::get('/status', [OrderListController::class, 'getByStatus']);
-        Route::get('/findByNumber/{id}', [OrderListController::class, 'findByNumber']);
-        Route::put('/markAsDone/{id}', [OrderListController::class, 'markAsDone']);
-        Route::get('/checkOrder', [OrderListController::class, 'checkOrder']);
-        Route::get('/cancelOrder', [OrderListController::class, 'cancelOrder']);
-    });
-
-    // View-only access to products, categories, tables
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}', [CategoryController::class, 'show']);
-    Route::get('/tables', [TableNumberController::class, 'index']);
-    Route::get('/tables/{id}', [TableNumberController::class, 'show']);
->>>>>>> 2a0322896c28ac6098a4041156f9ba15ca0a26bc
 });

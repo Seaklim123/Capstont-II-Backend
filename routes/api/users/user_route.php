@@ -3,12 +3,11 @@
 use App\Http\Controllers\Backend\auth\AuthController;
 use App\Http\Controllers\Backend\cart\CartController;
 use App\Http\Controllers\Backend\category\CategoryController;
-use App\Http\Controllers\backend\orders\OrderController;
+use App\Http\Controllers\Backend\orders\OrderController;
 use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
 use Illuminate\Support\Facades\Route;
 
-<<<<<<< HEAD
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -36,19 +35,18 @@ Route::prefix('auth')->group(function () {
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::post('/', [OrderController::class, 'store']);
+        Route::put('/{id}', [OrderController::class, 'update']);
         Route::get('/status', [OrderController::class, 'getByStatus']);
         Route::get('/findByNumber/{id}', [OrderController::class, 'findByNumber']);
+        Route::put('/markAsDone/{id}', [OrderController::class, 'markAsDone']);
         Route::get('/checkOrder', [OrderController::class, 'checkOrder']);
+        Route::put('/cancelOrder/{id}', [OrderController::class, 'cancelOrder']);
     });
+
     Route::prefix('payment')->group(function () {
         Route::post('/create', [PaymentController::class, 'createPayment']);
         Route::get('/success', [PaymentController::class, 'paymentSuccess']);
         Route::get('/cancel', [PaymentController::class, 'paymentCancel']);
     });
 
-=======
-Route::prefix('auth')->name('auth.')->group(function () {
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
->>>>>>> 2a0322896c28ac6098a4041156f9ba15ca0a26bc
 });

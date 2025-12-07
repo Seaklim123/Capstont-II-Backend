@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrderInformation extends Model
 {
@@ -23,9 +24,9 @@ class OrderInformation extends Model
         'user_id'
     ];
 
-    public function orderLists(): BelongsTo
+    public function orderLists(): HasMany
     {
-        return $this->belongsTo(OrderList::class, 'order_list_id', 'id');
+        return $this->hasMany(OrderList::class, 'numberOrder', 'numberOrder');
     }
     public function users()
     {
