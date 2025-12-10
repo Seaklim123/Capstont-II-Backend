@@ -48,31 +48,33 @@ EXPOSE 80
 
 # Simple start script
 RUN echo '#!/bin/bash\n\
-# Create storage directories\n\
-mkdir -p /var/www/html/storage/logs\n\
-mkdir -p /var/www/html/storage/framework/cache\n\
-mkdir -p /var/www/html/storage/framework/sessions\n\
-mkdir -p /var/www/html/storage/framework/views\n\
-mkdir -p /var/www/html/bootstrap/cache\n\
+# Set proper permissions\n\
+chown -R www-data:www-data /var/www/html\n\
+chmod -R 755 /var/www/html\n\
+chmod -R 775 /var/www/html/storage || true\n\
+chmod -R 775 /var/www/html/bootstrap/cache || true\n\
 \n\
-# Set permissions\n\
-chown -R www-data:www-data /var/www/html/storage\n\
-chown -R www-data:www-data /var/www/html/bootstrap/cache\n\
-chmod -R 775 /var/www/html/storage\n\
-chmod -R 775 /var/www/html/bootstrap/cache\n\
+# Ensure index.php exists and is readable\n\
+ls -la /var/www/html/public/index.php\n\
 \n\
 # Generate app key if not exists\n\
 if [ -z "$APP_KEY" ]; then\n\
     php artisan key:generate --force\n\
 fi\n\
 \n\
-# Cache config\n\
-php artisan config:cache\n\
+# Cache config (ignore errors)\n\
+php artisan config:clear || true\n\
+php artisan config:cache || true\n\
 \n\
 # Run migrations (ignore errors)\n\
 php artisan migrate --force || true\n\
 \n\
+# Test if PHP works\n\
+echo "Testing PHP..."\n\
+cd /var/www/html/public && php -S 0.0.0.0:8080 index.php &\n\
+\n\
 # Start Apache\n\
+echo "Starting Apache..."\n\
 apache2-foreground\n\
 ' > /start.sh && chmod +x /start.sh
 
