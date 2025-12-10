@@ -32,3 +32,6 @@ bootstrap/cache/*
 # Temp files
 *.tmp
 *.temp
+
+# Force rebuild timestamp
+# BUILD_TIME=2025-12-11
