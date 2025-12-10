@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      - APP_NAME=Laravel
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=tosorder
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - SESSION_DRIVER=database
+      - CACHE_STORE=database
+    volumes:
+      - ./storage:/var/www/html/storage
+    depends_on:
+      - db
+    networks:
+      - laravel
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=tosorder
+      - MYSQL_USER=laravel
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - laravel
+
+volumes:
+  mysql_data:
+
+networks:
+  laravel:
+    driver: bridge
