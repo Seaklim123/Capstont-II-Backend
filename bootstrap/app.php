@@ -7,7 +7,13 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
         using: function () {
+            // Load web routes first
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+                
             // Public API routes
             Route::prefix('api/v1')
                 ->name('api.')
@@ -19,7 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->middleware(['auth:sanctum', 'check.user.status'])
                 ->group(base_path('routes/api/api_auth.php'));
         },
-    // ... rest of your config
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
