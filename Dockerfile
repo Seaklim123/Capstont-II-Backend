@@ -1,5 +1,5 @@
-# Use PHP 8.2 with Apache
-FROM php:8.2-apache
+# Use PHP 8.2 FPM (no Apache)
+FROM php:8.2-fpm
 
 # Set working directory
 WORKDIR /var/www/html
@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
+    nginx \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -33,49 +34,56 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Configure Apache
-RUN a2enmod rewrite
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
-
-# Set environment variable for Apache
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+# Create nginx config
+RUN echo 'server {\n\
+    listen 80;\n\
+    index index.php;\n\
+    error_log  /var/log/nginx/error.log;\n\
+    access_log /var/log/nginx/access.log;\n\
+    root /var/www/html/public;\n\
+\n\
+    location ~ \.php$ {\n\
+        try_files $uri =404;\n\
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;\n\
+        fastcgi_pass 127.0.0.1:9000;\n\
+        fastcgi_index index.php;\n\
+        include fastcgi_params;\n\
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n\
+        fastcgi_param PATH_INFO $fastcgi_path_info;\n\
+    }\n\
+\n\
+    location / {\n\
+        try_files $uri $uri/ /index.php?$query_string;\n\
+    }\n\
+}\n\
+' > /etc/nginx/sites-available/default
 
 # Expose port 80
 EXPOSE 80
 
-# Simple start script
+# Simple start script with nginx + php-fpm
 RUN echo '#!/bin/bash\n\
-# Set proper permissions\n\
-chown -R www-data:www-data /var/www/html\n\
-chmod -R 755 /var/www/html\n\
-chmod -R 775 /var/www/html/storage || true\n\
-chmod -R 775 /var/www/html/bootstrap/cache || true\n\
-\n\
-# Ensure index.php exists and is readable\n\
-ls -la /var/www/html/public/index.php\n\
-\n\
 # Generate app key if not exists\n\
 if [ -z "$APP_KEY" ]; then\n\
     php artisan key:generate --force\n\
 fi\n\
 \n\
-# Cache config (ignore errors)\n\
+# Clear and cache config\n\
 php artisan config:clear || true\n\
 php artisan config:cache || true\n\
 \n\
 # Run migrations (ignore errors)\n\
 php artisan migrate --force || true\n\
 \n\
-# Test if PHP works\n\
-echo "Testing PHP..."\n\
-cd /var/www/html/public && php -S 0.0.0.0:8080 index.php &\n\
+# Start PHP-FPM in background\n\
+php-fpm -D\n\
 \n\
-# Start Apache\n\
-echo "Starting Apache..."\n\
-apache2-foreground\n\
+# Start Nginx\n\
+nginx -g "daemon off;"\n\
 ' > /start.sh && chmod +x /start.sh
 
 CMD ["/start.sh"]
