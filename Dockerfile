@@ -49,6 +49,19 @@ EXPOSE 80
 
 # Simple start script
 RUN echo '#!/bin/bash\n\
+# Create storage directories\n\
+mkdir -p /var/www/html/storage/logs\n\
+mkdir -p /var/www/html/storage/framework/cache\n\
+mkdir -p /var/www/html/storage/framework/sessions\n\
+mkdir -p /var/www/html/storage/framework/views\n\
+mkdir -p /var/www/html/bootstrap/cache\n\
+\n\
+# Set permissions\n\
+chown -R www-data:www-data /var/www/html/storage\n\
+chown -R www-data:www-data /var/www/html/bootstrap/cache\n\
+chmod -R 775 /var/www/html/storage\n\
+chmod -R 775 /var/www/html/bootstrap/cache\n\
+\n\
 # Generate app key if not exists\n\
 if [ -z "$APP_KEY" ]; then\n\
     php artisan key:generate --force\n\
