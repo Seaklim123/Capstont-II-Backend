@@ -12,5 +12,6 @@ interface ProductRepositoriesInterfaces{
     public function update(int $id, array $data);
     public function delete(int $id);
 
-    // public function getProductsMostPurchased(string $name, Double $totalPrice): Collection;
+    public function getProductsWithMostOrders(int $limit, ?string $startDate, ?string $endDate);
+
 }

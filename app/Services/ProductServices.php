@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\ProductRepositoriesInterfaces;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 
@@ -138,5 +139,78 @@ class ProductServices{
         return $this->productRepository->delete($id);
     }
 
+    /**
+     * Get products with most orders
+     *
+     * @param int $limit
+     * @param string|null $startDate
+     * @param string|null $endDate
+     * @return \Illuminate\Support\Collection
+     */
+    public function getProductsWithMostOrders(int $limit = 10, ?string $startDate = null, ?string $endDate = null)
+    {
+        return $this->productRepository->getProductsWithMostOrders($limit, $startDate, $endDate);
+    }
+
+    public function deleteMultipleProducts(array $ids): array
+    {
+        Log::info('ProductServices deleteMultipleProducts called with IDs:', $ids);
+
+        $results = [
+            'success_count' => 0,
+            'error_count' => 0,
+            'deleted_ids' => [],
+            'errors' => []
+        ];
+
+        foreach ($ids as $id) {
+            try {
+                // Get product before deletion
+                $product = $this->productRepository->find($id);
+
+                if (!$product) {
+                    $results['errors'][] = [
+                        'id' => $id,
+                        'message' => 'Product not found'
+                    ];
+                    $results['error_count']++;
+                    continue;
+                }
+
+                // Delete image file if it exists and is not a URL
+                if ($product->image_path && !filter_var($product->image_path, FILTER_VALIDATE_URL)) {
+                    Storage::disk('public')->delete($product->image_path);
+                    Log::info('Deleted image file: ' . $product->image_path);
+                }
+
+                // Delete product from database
+                $deleted = $this->productRepository->delete($id);
+
+                if ($deleted) {
+                    $results['success_count']++;
+                    $results['deleted_ids'][] = $id;
+                    Log::info('Successfully deleted product ID: ' . $id);
+                } else {
+                    $results['errors'][] = [
+                        'id' => $id,
+                        'message' => 'Failed to delete from database'
+                    ];
+                    $results['error_count']++;
+                }
+
+            } catch (\Exception $e) {
+                Log::error('Error deleting product ID ' . $id . ': ' . $e->getMessage());
+                $results['errors'][] = [
+                    'id' => $id,
+                    'message' => $e->getMessage()
+                ];
+                $results['error_count']++;
+            }
+        }
+
+        Log::info('Delete multiple products result:', $results);
+
+        return $results;
+    }
 
 }

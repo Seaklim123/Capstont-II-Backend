@@ -61,6 +61,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::put('/{id}', [ProductController::class, 'update']);
         Route::delete('/{id}', [ProductController::class, 'destroy']);
+        Route::post('/delete-multiple', [ProductController::class, 'deleteMultiple']);
     });
 
     Route::prefix('dashboard')->group(function () {
