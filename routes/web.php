@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 // Simple health check for API backend
 Route::get('/', function () {
@@ -18,6 +19,14 @@ Route::post('/api/v1/auth/register-debug', function () {
         'message' => 'Debug endpoint reached!',
         'timestamp' => now(),
         'routes_loaded' => 'yes'
+    ]);
+});
+
+Route::post('/api/v1/test-basic', function (Request $request) {
+    return response()->json([
+        'success' => true,
+        'message' => 'Super basic test endpoint',
+        'data' => $request->all()
     ]);
 });
 

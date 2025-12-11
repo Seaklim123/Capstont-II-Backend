@@ -27,30 +27,35 @@ class AuthController extends Controller
      * @param RegisterRequest $request
      * @return JsonResponse
      */
-    public function register(RegisterRequest $request): JsonResponse
+    public function register(Request $request): JsonResponse
     {
         try {
-            // Debug: Return basic info first
+            // Even more basic - just return request data without validation
             return response()->json([
                 'success' => true,
-                'message' => 'Production register endpoint reached!',
-                'data' => [
-                    'username' => $request->input('username'),
-                    'email' => $request->input('email'),
-                    'received_data' => $request->all()
-                ],
-                'debug' => [
-                    'validation_passed' => 'yes',
-                    'environment' => app()->environment()
-                ]
+                'message' => 'Basic endpoint reached!',
+                'received_data' => $request->all(),
+                'php_version' => phpversion(),
+                'laravel_version' => app()->version(),
+                'environment' => app()->environment()
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Registration failed',
+                'message' => 'Caught exception',
                 'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString()
+            ], 500);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Caught throwable',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(), 
+                'line' => $e->getLine()
             ], 500);
         }
     }
