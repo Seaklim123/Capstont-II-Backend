@@ -8,7 +8,7 @@ use App\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\backend\Auth\LoginRequest;
 use App\Http\Requests\backend\Auth\RegisterRequest;
-use App\Http\Resources\backend\Auth\AuthResource;
+use App\Http\Resources\Backend\Auth\AuthResource;
 use App\Services\Interface\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
