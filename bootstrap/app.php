@@ -10,15 +10,16 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         using: function () {
-            // Public API routes (no auth required)
+            // Public API routes (no auth required) 
             Route::prefix('api/v1')
                 ->name('api.')
+                ->middleware('api')
                 ->group(base_path('routes/api/api.php'));
 
             // Protected API routes with authentication
             Route::prefix('api/v1')
                 ->name('api.')
-                ->middleware(['auth:sanctum', 'check.user.status'])
+                ->middleware(['api', 'auth:sanctum', 'check.user.status'])
                 ->group(base_path('routes/api/api_auth.php'));
                 
             // Web routes for health check
