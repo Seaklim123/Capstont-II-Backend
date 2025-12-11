@@ -63,46 +63,39 @@ class AuthController extends Controller
     /**
      * Login user and generate token
      *
-     * @param LoginRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function login(LoginRequest $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         try {
-            $token = $this->userService->login(
-                $request->input('username'),
-                $request->input('password')
-            );
-
-            $user = $this->userService->findUserByUsername($request->input('username'));
-
+            // Basic test - just return request data for now to avoid LoginRequest dependency
             return response()->json([
                 'success' => true,
-                'message' => 'Login successful',
-                'data' => [
-                    'user' => new AuthResource($user),
-                    'token' => $token,
-                    'token_type' => 'Bearer',
-                ],
+                'message' => 'Login endpoint reached!',
+                'received_data' => $request->all(),
+                'php_version' => phpversion(),
+                'laravel_version' => app()->version(),
+                'environment' => app()->environment(),
+                'timestamp' => now()
             ], 200);
-
-        } catch (UserNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid credentials',
-            ], 401);
-
-        } catch (UnauthorizedException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 401);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Login failed',
+                'message' => 'Caught exception in login',
                 'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Caught throwable in login',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(), 
+                'line' => $e->getLine()
             ], 500);
         }
     }
