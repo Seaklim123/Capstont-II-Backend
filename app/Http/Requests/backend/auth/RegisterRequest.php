@@ -19,7 +19,7 @@ class RegisterRequest extends FormRequest
             'primary_phone' => 'required|string|between:8,20|unique:users,primary_phone',
             'secondary_phone' => 'nullable|string|between:8,20|unique:users,secondary_phone',
             'password' => 'required|string|min:8|max:255|confirmed',
-            'role' => 'required|string|in:admin',
+            'role' => 'required|string|in:admin,cashier',
             'status' => 'sometimes|string|in:active,inactive',
         ];
     }

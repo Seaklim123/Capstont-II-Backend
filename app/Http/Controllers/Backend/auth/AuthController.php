@@ -30,38 +30,27 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         try {
-            // Create UserDto from request
-            $userDto = new UserDto(
-                username: $request->input('username'),
-                password: $request->input('password'),
-                primary_phone: $request->input('primary_phone'),
-                email: $request->input('email'),
-                secondary_phone: $request->input('secondary_phone'),
-                role: $request->input('role', 'admin'),
-                status: $request->input('status', 'active')
-            );
-
-            // Create user through service
-            $user = $this->userService->register($userDto);
-
-            // Return success response
+            // Debug: Return basic info first
             return response()->json([
                 'success' => true,
-                'message' => 'User registered successfully',
-                'data' => new AuthResource($user),
-            ], 201);
-
-        } catch (InvalidRoleException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400);
+                'message' => 'Production register endpoint reached!',
+                'data' => [
+                    'username' => $request->input('username'),
+                    'email' => $request->input('email'),
+                    'received_data' => $request->all()
+                ],
+                'debug' => [
+                    'validation_passed' => 'yes',
+                    'environment' => app()->environment()
+                ]
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Registration failed',
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
     }
