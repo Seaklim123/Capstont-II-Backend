@@ -10,20 +10,20 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         using: function () {
-            // Load web routes first
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-                
-            // Public API routes
+            // Public API routes (no auth required)
             Route::prefix('api/v1')
                 ->name('api.')
                 ->group(base_path('routes/api/api.php'));
 
-            // Protected API routes with status check
+            // Protected API routes with authentication
             Route::prefix('api/v1')
                 ->name('api.')
                 ->middleware(['auth:sanctum', 'check.user.status'])
                 ->group(base_path('routes/api/api_auth.php'));
+                
+            // Web routes for health check
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {

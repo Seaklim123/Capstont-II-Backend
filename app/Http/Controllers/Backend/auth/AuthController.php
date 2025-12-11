@@ -30,12 +30,24 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         try {
-            $userDto = UserDto::fromArray($request->validated());
+            // Create UserDto from request
+            $userDto = new UserDto(
+                username: $request->input('username'),
+                password: $request->input('password'),
+                primary_phone: $request->input('primary_phone'),
+                email: $request->input('email'),
+                secondary_phone: $request->input('secondary_phone'),
+                role: $request->input('role', 'admin'),
+                status: $request->input('status', 'active')
+            );
+
+            // Create user through service
             $user = $this->userService->register($userDto);
 
+            // Return success response
             return response()->json([
                 'success' => true,
-                'message' => 'Admin registered successfully',
+                'message' => 'User registered successfully',
                 'data' => new AuthResource($user),
             ], 201);
 
@@ -238,5 +250,19 @@ class AuthController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Simple hello endpoint for testing
+     *
+     * @return JsonResponse
+     */
+    public function hello(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Hello from Auth Controller!',
+            'timestamp' => now(),
+        ], 200);
     }
 }
