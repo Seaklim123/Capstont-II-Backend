@@ -20,4 +20,16 @@ Route::post('/v1/test-basic', function (Request $request) {
     ]);
 });
 
+// Debug database config
+Route::get('/v1/debug-db', function () {
+    return response()->json([
+        'DATABASE_URL_exists' => env('DATABASE_URL') ? 'YES' : 'NO',
+        'DATABASE_URL_length' => env('DATABASE_URL') ? strlen(env('DATABASE_URL')) : 0,
+        'DATABASE_URL_preview' => env('DATABASE_URL') ? substr(env('DATABASE_URL'), 0, 50) . '...' : 'NOT_SET',
+        'DB_CONNECTION' => env('DB_CONNECTION'),
+        'current_db_config' => config('database.connections.pgsql'),
+        'default_connection' => config('database.default')
+    ]);
+});
+
 
