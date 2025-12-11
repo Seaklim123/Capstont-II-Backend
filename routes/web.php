@@ -22,13 +22,7 @@ Route::post('/api/v1/auth/register-debug', function () {
     ]);
 });
 
-Route::post('/api/v1/test-basic', function (Request $request) {
-    return response()->json([
-        'success' => true,
-        'message' => 'Super basic test endpoint',
-        'data' => $request->all()
-    ]);
-});
+
 
 Route::get('/debug-routes', function () {
     $routes = [];
