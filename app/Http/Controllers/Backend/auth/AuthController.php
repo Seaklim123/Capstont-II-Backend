@@ -24,38 +24,66 @@ class AuthController extends Controller
     /**
      * Register a new admin user
      *
-     * @param RegisterRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function register(Request $request): JsonResponse
     {
         try {
-            // Even more basic - just return request data without validation
+            // Basic validation
+            $validatedData = $request->validate([
+                'username' => 'required|string|unique:users,username',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6',
+                'password_confirmation' => 'required|same:password',
+                'primary_phone' => 'required|string',
+                'secondary_phone' => 'nullable|string',
+                'role' => 'required|string|in:admin,cashier',
+                'status' => 'required|string|in:active,inactive'
+            ]);
+
+            $userDto = new UserDto(
+                username: $validatedData['username'],
+                email: $validatedData['email'],
+                password: $validatedData['password'],
+                primary_phone: $validatedData['primary_phone'],
+                secondary_phone: $validatedData['secondary_phone'] ?? null,
+                role: $validatedData['role'],
+                status: $validatedData['status']
+            );
+
+            $user = $this->userService->store($userDto);
+
             return response()->json([
                 'success' => true,
-                'message' => 'Basic endpoint reached!',
-                'received_data' => $request->all(),
-                'php_version' => phpversion(),
-                'laravel_version' => app()->version(),
-                'environment' => app()->environment()
-            ], 200);
+                'message' => 'User registered successfully',
+                'data' => [
+                    'user' => new AuthResource($user),
+                ],
+            ], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (InvalidRoleException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Caught exception',
+                'message' => 'Registration failed',
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ], 500);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Caught throwable',
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(), 
-                'line' => $e->getLine()
+                'debug_info' => [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]
             ], 500);
         }
     }
@@ -69,33 +97,50 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         try {
-            // Basic test - just return request data for now to avoid LoginRequest dependency
+            // Basic validation
+            $request->validate([
+                'username' => 'required|string',
+                'password' => 'required|string'
+            ]);
+
+            $token = $this->userService->login(
+                $request->input('username'),
+                $request->input('password')
+            );
+
+            $user = $this->userService->findUserByUsername($request->input('username'));
+
             return response()->json([
                 'success' => true,
-                'message' => 'Login endpoint reached!',
-                'received_data' => $request->all(),
-                'php_version' => phpversion(),
-                'laravel_version' => app()->version(),
-                'environment' => app()->environment(),
-                'timestamp' => now()
+                'message' => 'Login successful',
+                'data' => [
+                    'user' => new AuthResource($user),
+                    'token' => $token,
+                    'token_type' => 'Bearer',
+                ],
             ], 200);
+
+        } catch (UserNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials - user not found',
+            ], 401);
+
+        } catch (UnauthorizedException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 401);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Caught exception in login',
+                'message' => 'Login failed',
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ], 500);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Caught throwable in login',
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(), 
-                'line' => $e->getLine()
+                'debug_info' => [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]
             ], 500);
         }
     }
