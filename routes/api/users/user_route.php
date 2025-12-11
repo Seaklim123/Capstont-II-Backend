@@ -8,8 +8,8 @@ Route::prefix('auth')->group(function () {
     // Authentication routes
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
-    
+
     // Test routes
-    Route::get('/hello', [AuthController::class, 'hello']);
+    Route::get('/hello', [AuthController::class, 'sayHello']);
     Route::post('/test', [AuthController::class, 'hello']); // Test POST method
 });
