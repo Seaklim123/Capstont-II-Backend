@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .form-group { margin: 10px 0; }
+        input, button { padding: 8px; margin: 5px; }
+        #result { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Laravel API Registration Test</h1>
+    
+    <div class="form-group">
+        <input type="text" id="username" placeholder="Username" value="browsertest">
+    </div>
+    <div class="form-group">
+        <input type="email" id="email" placeholder="Email" value="browser@example.com">
+    </div>
+    <div class="form-group">
+        <input type="text" id="phone" placeholder="Phone" value="0987654321">
+    </div>
+    <div class="form-group">
+        <input type="password" id="password" placeholder="Password" value="password123">
+    </div>
+    <div class="form-group">
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" value="password123">
+    </div>
+    
+    <button onclick="testRegister()">Test Registration</button>
+    <button onclick="testHealthCheck()">Test Health Check</button>
+    
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'https://capstont-ii-backend-1.onrender.com';
+        
+        async function testHealthCheck() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing health check...';
+            
+            try {
+                const response = await fetch(API_BASE + '/');
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="success">
+                    <h3>Health Check Success!</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">
+                    <h3>Health Check Failed!</h3>
+                    <pre>${error.message}</pre>
+                </div>`;
+            }
+        }
+        
+        async function testRegister() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing registration...';
+            
+            const data = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                primary_phone: document.getElementById('phone').value,
+                secondary_phone: "",
+                password: document.getElementById('password').value,
+                password_confirmation: document.getElementById('confirmPassword').value,
+                role: "admin",
+                status: "active"
+            };
+            
+            try {
+                const response = await fetch(API_BASE + '/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">
+                        <h3>Registration Success!</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">
+                        <h3>Registration Failed! (${response.status})</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">
+                    <h3>Network Error!</h3>
+                    <pre>${error.message}</pre>
+                </div>`;
+            }
+        }
+    </script>
+</body>
+</html>
