@@ -21,6 +21,22 @@ class Products extends Model
         'category_id',
     ];
 
+    /**
+     * Get the full image URL
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_path) {
+            return asset('storage/' . $this->image_path);
+        }
+        return null;
+    }
+
+    /**
+     * Add image_url to JSON output
+     */
+    protected $appends = ['image_url'];
+
     public function category(): BelongsTo{
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
