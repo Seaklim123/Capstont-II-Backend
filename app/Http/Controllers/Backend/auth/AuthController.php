@@ -21,6 +21,9 @@ class AuthController extends Controller
         protected UserServiceInterface $userService
     ) {}
 
+    public function sayHello(): string {
+        return "Hello World!";
+    }
     /**
      * Register a new admin user
      *
