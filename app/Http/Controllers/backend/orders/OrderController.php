@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\backend\orders;
+namespace App\Http\Controllers\Backend\orders;
 
 use App\Http\Requests\backend\orders\CreateOrderRequest;
 use App\Http\Requests\backend\orders\UpdateStatusOrderRequest;
@@ -56,7 +56,7 @@ class OrderController extends Controller
         return CheackOrderResourcse::collection($orders);
 
     }
-    //  Select Order By ID of OrderInformation 
+    //  Select Order By ID of OrderInformation
     public function getByStatus(UpdateStatusOrderRequest $request)
     {
         $validated = $request->validated();
