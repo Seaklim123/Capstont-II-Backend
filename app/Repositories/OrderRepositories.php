@@ -211,7 +211,7 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
             'orderLists.cart.product',     // ✅ relationship, not column
             'orderLists.cart.tableNumber'  // ✅ relationship, not column
         ])->where('order_informations.status', $status)->get();
-        
+
         // Transform the data to include item details and refund calculations
         $orders->map(function ($order) {
             $refundTotal = 0;
@@ -223,12 +223,12 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
                     $quantity = $orderList->cart->quantity;
                     $unitPrice = $product->price - ($product->discount ?? 0);
                     $totalPrice = $unitPrice * $quantity;
-                    
+
                     // If item is cancelled, add to refund
                     if ($orderList->status === 'cancel') {
                         $refundTotal += $totalPrice;
                     }
-                    
+
                     // Add item details to list
                     $itemList[] = [
                         'order_list_id' => $orderList->id,
@@ -253,7 +253,7 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
 
             return $order;
         });
-        
+
         return $orders;
     }
 
@@ -279,11 +279,11 @@ class OrderRepositories implements OrderRepositoriesInterfaces{
                 $quantity = $orderList->cart->quantity;
                 $unitPrice = $product->price - ($product->discount ?? 0);
                 $totalPrice = $unitPrice * $quantity;
-                
+
                 if ($orderList->status === 'cancel') {
                     $refundTotal += $totalPrice;
                 }
-                
+
                 $itemList[] = [
                     'order_list_id' => $orderList->id,
                     'product_id' => $product->id,
