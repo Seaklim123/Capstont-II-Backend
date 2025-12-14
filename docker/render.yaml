@@ -28,6 +28,8 @@ services:
         value: stderr
       - key: LOG_LEVEL
         value: info
+      - key: LOG_STDERR_FORMATTER
+        value: Monolog\Formatter\JsonFormatter
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST

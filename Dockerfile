@@ -37,12 +37,13 @@ COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Create necessary directories and set permissions
+# Create necessary directories and set permissions BEFORE copying files
 RUN mkdir -p /var/www/storage/logs \
     && mkdir -p /var/www/storage/framework/sessions \
     && mkdir -p /var/www/storage/framework/views \
-    && mkdir -p /var/www/storage/framework/cache \
+    && mkdir -p /var/www/storage/framework/cache/data \
     && mkdir -p /var/www/bootstrap/cache \
+    && touch /var/www/storage/logs/laravel.log \
     && chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage \
     && chmod -R 775 /var/www/bootstrap/cache
