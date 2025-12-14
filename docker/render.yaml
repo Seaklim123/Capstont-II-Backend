@@ -1,3 +1,10 @@
+databases:
+  - name: qr-ordering-db
+    databaseName: qr_code_ordering_system
+    user: qr_ordering_db_user
+    plan: starter
+    region: singapore
+
 services:
   - type: web
     name: qr-ordering-api
@@ -17,6 +24,10 @@ services:
         value: false
       - key: APP_URL
         value: https://qr-ordering-api.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
@@ -45,9 +56,3 @@ services:
         value: file
       - key: QUEUE_CONNECTION
         value: sync
-
-databases:
-  - name: qr-ordering-db
-    databaseName: qr_code_ordering_system
-    plan: starter
-    region: singapore
