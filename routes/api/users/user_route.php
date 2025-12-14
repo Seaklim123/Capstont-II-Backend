@@ -8,6 +8,15 @@ use App\Http\Controllers\Backend\orders\PaymentController;
 use App\Http\Controllers\Backend\product\ProductController;
 use Illuminate\Support\Facades\Route;
 
+// Health check endpoint
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'API is healthy',
+        'timestamp' => now()
+    ]);
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -25,6 +34,7 @@ Route::prefix('auth')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
     });
+
     Route::prefix('carts')->group(function () {
         Route::get('/', [CartController::class, 'index']);
         Route::get('/{id}', [CartController::class, 'show']);
@@ -32,6 +42,7 @@ Route::prefix('auth')->group(function () {
         Route::put('/{id}', [CartController::class, 'update']);
         Route::delete('/{id}', [CartController::class, 'destroy']);
     });
+
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::post('/', [OrderController::class, 'store']);
@@ -48,10 +59,4 @@ Route::prefix('auth')->group(function () {
         Route::get('/success', [PaymentController::class, 'paymentSuccess']);
         Route::get('/cancel', [PaymentController::class, 'paymentCancel']);
     });
-
-});
-
-
-Route::prefix('/health')->group(function () {
-    return "Good!!";
 });
