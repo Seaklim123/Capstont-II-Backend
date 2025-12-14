@@ -30,7 +30,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
         Route::get('/cashiers', [UserController::class, 'cashiers'])->name('cashiers');
         Route::get('/search', [UserController::class, 'search'])->name('search');
         Route::get('/{id}', [UserController::class, 'show'])->name('show');
-        Route::post('/cashier', [UserController::class, 'cashier'])->name('create.cashier');
+        Route::post('/cashiers', [UserController::class, 'cashier'])->name('create.cashier');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
         Route::patch('/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle.status');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');

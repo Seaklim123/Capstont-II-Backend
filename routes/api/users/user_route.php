@@ -12,3 +12,8 @@ Route::prefix('auth')->name('auth.')->group(function () {
     });
 });
 
+// routes/web.php
+Route::get('/health', function () {
+    return "Good!!";
+});
+
