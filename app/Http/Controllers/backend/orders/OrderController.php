@@ -28,13 +28,13 @@ class OrderController extends Controller
             'payment' => 'required|in:card,cash',
             'phone_number' => 'nullable|string|regex:/^[0-9+\-\s]{8,15}$/'
         ]);
-        // dd(vars: $validated);
+        // dd($validated);
 
         try {
             $order = $this->orderService->startOrder(
-                $request->table_id,
-                $request->payment,
-                $request->phone_number
+                $validated['table_id'],
+                $validated['payment'],
+                $validated['phone_number'] ?? null
             );
 
             return response()->json([
@@ -48,6 +48,7 @@ class OrderController extends Controller
             ], 400);
         }
     }
+
     public function index()
     {
         $orders = $this->orderService->getOrder();
