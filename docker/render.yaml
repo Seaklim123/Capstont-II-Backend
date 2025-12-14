@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: qr-ordering-api
+    env: docker
+    region: singapore
+    plan: starter
+    branch: main
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: APP_NAME
+        value: QR Ordering System
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://qr-ordering-api.onrender.com
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: qr-ordering-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: qr-ordering-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: qr-ordering-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: qr-ordering-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: qr-ordering-db
+          property: password
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+
+databases:
+  - name: qr-ordering-db
+    databaseName: qr_code_ordering_system
+    plan: starter
+    region: singapore
