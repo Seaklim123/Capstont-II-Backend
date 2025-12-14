@@ -10,4 +10,5 @@ interface OrderRepositoriesInterfaces{
     public function getOrder();
     public function acceptOrder(array $data, int $id);
     public function cancelList($id);
+    public function getOrderItemList($orderNumber);
 }

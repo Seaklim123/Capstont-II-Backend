@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_informations', function (Blueprint $table) {
+      Schema::create('order_informations', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('numberOrder');
             $table->double('totalPrice')->default(0)->nullable();
